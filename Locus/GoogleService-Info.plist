@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>AD_UNIT_ID_FOR_BANNER_TEST</key>
+	<string>ca-app-pub-3940256099942544/2934735716</string>
+	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
+	<string>ca-app-pub-3940256099942544/4411468910</string>
+	<key>CLIENT_ID</key>
+	<string>689663312377-1sav41ght8d6g0qv3q0c01u3q6bki1mn.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.689663312377-1sav41ght8d6g0qv3q0c01u3q6bki1mn</string>
+	<key>API_KEY</key>
+	<string>AIzaSyB-RSXnfsq7BWG1tdcsleWiw5ekXzR1KRQ</string>
+	<key>GCM_SENDER_ID</key>
+	<string>689663312377</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.endejeje.Locus</string>
+	<key>PROJECT_ID</key>
+	<string>locus-4f995</string>
+	<key>STORAGE_BUCKET</key>
+	<string>locus-4f995.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<true/>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false/>
+	<key>IS_APPINVITE_ENABLED</key>
+	<false/>
+	<key>IS_GCM_ENABLED</key>
+	<true/>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true/>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:689663312377:ios:16b459466eb46c8d</string>
+	<key>DATABASE_URL</key>
+	<string>https://locus-4f995.firebaseio.com</string>
+</dict>
+</plist>
