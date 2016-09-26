@@ -18,7 +18,34 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
         FIRApp.configure()
+        
+        FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
+        
+        // if this key exist in userDefault
+        if let _ = NSUserDefaults.standardUserDefaults().objectForKey("userUID") as? String{
+            
+            // load storyboard
+            let storyBoard = UIStoryboard(name: "MapView", bundle: NSBundle.mainBundle())
+            // load view controller with the storyboardID of HomeTabBarController
+            let viewController = storyBoard.instantiateViewControllerWithIdentifier("MapViewController")
+            
+            self.window?.rootViewController = viewController
+            
+        }
+        
         return true
+    }
+    
+    
+    func application(application: UIApplication, openURL url: NSURL, options: [String: AnyObject]) -> Bool {
+
+        if (FBSDKApplicationDelegate.sharedInstance().application(application, openURL: url, sourceApplication: options[UIApplicationOpenURLOptionsSourceApplicationKey] as? String, annotation: options[UIApplicationOpenURLOptionsAnnotationKey])){
+            
+            return true
+        }
+        
+        return false
+        
     }
 
     func applicationWillResignActive(application: UIApplication) {
