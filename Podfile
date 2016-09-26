@@ -6,7 +6,9 @@ target 'Locus' do
   use_frameworks!
 
   # Pods for Locus
-pod 'Firebase'
+  pod 'Firebase'
+  pod 'Firebase/Auth'
+  pod 'Firebase/Database'
 
 
 end

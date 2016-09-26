@@ -56,5 +56,13 @@
 	<string>941536092618155</string>
 	<key>FacebookDisplayName</key>
 	<string>Locus</string>
+    
+    <key>LSApplicationQueriesSchemes</key>
+    <array>
+        <string>fbapi</string>
+        <string>fb-messenger-api</string>
+        <string>fbauth2</string>
+        <string>fbshareextension</string>
+    </array>
 </dict>
 </plist>
