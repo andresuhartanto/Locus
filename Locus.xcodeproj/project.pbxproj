@@ -22,6 +22,11 @@
 		65CDC2181D99032500D046FE /* MapView.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65CDC2171D99032500D046FE /* MapView.storyboard */; };
 		65CDC21A1D99042F00D046FE /* Profile.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65CDC2191D99042F00D046FE /* Profile.storyboard */; };
 		65CDC21C1D99044900D046FE /* PlaceDetail.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65CDC21B1D99044900D046FE /* PlaceDetail.storyboard */; };
+		65CDC21E1D9918D800D046FE /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CDC21D1D9918D800D046FE /* MapViewController.swift */; };
+		65CDC2201D9A5A8A00D046FE /* MarkerInfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 65CDC21F1D9A5A8A00D046FE /* MarkerInfoView.xib */; };
+		65CDC2231D9A5B0700D046FE /* MarkerInforView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CDC2221D9A5B0700D046FE /* MarkerInforView.swift */; };
+		65CDC2251D9B84FE00D046FE /* PlaceDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CDC2241D9B84FE00D046FE /* PlaceDetailViewController.swift */; };
+		65CDC2271D9B852400D046FE /* ImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CDC2261D9B852400D046FE /* ImageCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,6 +49,11 @@
 		65CDC2171D99032500D046FE /* MapView.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MapView.storyboard; sourceTree = "<group>"; };
 		65CDC2191D99042F00D046FE /* Profile.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Profile.storyboard; sourceTree = "<group>"; };
 		65CDC21B1D99044900D046FE /* PlaceDetail.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = PlaceDetail.storyboard; sourceTree = "<group>"; };
+		65CDC21D1D9918D800D046FE /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
+		65CDC21F1D9A5A8A00D046FE /* MarkerInfoView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MarkerInfoView.xib; sourceTree = "<group>"; };
+		65CDC2221D9A5B0700D046FE /* MarkerInforView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkerInforView.swift; sourceTree = "<group>"; };
+		65CDC2241D9B84FE00D046FE /* PlaceDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaceDetailViewController.swift; sourceTree = "<group>"; };
+		65CDC2261D9B852400D046FE /* ImageCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCollectionViewCell.swift; sourceTree = "<group>"; };
 		8BED38DEEF7DBE6FA5DA54C8 /* Pods_Locus.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Locus.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -87,10 +97,13 @@
 				65CDC2151D99008900D046FE /* DataService.swift */,
 				65CDC1F51D98E8F200D046FE /* SignUpViewController.swift */,
 				65CDC20F1D98F5B500D046FE /* LoginViewController.swift */,
+				65CDC21D1D9918D800D046FE /* MapViewController.swift */,
+				65CDC2241D9B84FE00D046FE /* PlaceDetailViewController.swift */,
+				65CDC2261D9B852400D046FE /* ImageCollectionViewCell.swift */,
 				65CDC1FA1D98E8F200D046FE /* Assets.xcassets */,
 				65CDC20E1D98F26B00D046FE /* Storyboards */,
+				65CDC2211D9A5AC800D046FE /* Marker View */,
 				65CDC20D1D98F16100D046FE /* Supporting Files */,
-				65CDC2121D98FBC700D046FE /* Locus-Bridging-Header.h */,
 			);
 			path = Locus;
 			sourceTree = "<group>";
@@ -98,6 +111,7 @@
 		65CDC20D1D98F16100D046FE /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				65CDC2121D98FBC700D046FE /* Locus-Bridging-Header.h */,
 				65CDC1FF1D98E8F200D046FE /* Info.plist */,
 				65CDC2051D98E94600D046FE /* GoogleService-Info.plist */,
 			);
@@ -114,6 +128,15 @@
 				65CDC1FC1D98E8F200D046FE /* LaunchScreen.storyboard */,
 			);
 			name = Storyboards;
+			sourceTree = "<group>";
+		};
+		65CDC2211D9A5AC800D046FE /* Marker View */ = {
+			isa = PBXGroup;
+			children = (
+				65CDC21F1D9A5A8A00D046FE /* MarkerInfoView.xib */,
+				65CDC2221D9A5B0700D046FE /* MarkerInforView.swift */,
+			);
+			name = "Marker View";
 			sourceTree = "<group>";
 		};
 		BD87123DD6F55918B3DFAB76 /* Pods */ = {
@@ -202,6 +225,7 @@
 				65CDC1FE1D98E8F200D046FE /* LaunchScreen.storyboard in Resources */,
 				65CDC2061D98E94600D046FE /* GoogleService-Info.plist in Resources */,
 				65CDC21C1D99044900D046FE /* PlaceDetail.storyboard in Resources */,
+				65CDC2201D9A5A8A00D046FE /* MarkerInfoView.xib in Resources */,
 				65CDC1FB1D98E8F200D046FE /* Assets.xcassets in Resources */,
 				65CDC2181D99032500D046FE /* MapView.storyboard in Resources */,
 				65CDC1F91D98E8F200D046FE /* Main.storyboard in Resources */,
@@ -265,8 +289,12 @@
 			files = (
 				65CDC2101D98F5B500D046FE /* LoginViewController.swift in Sources */,
 				65CDC1F61D98E8F200D046FE /* SignUpViewController.swift in Sources */,
+				65CDC2271D9B852400D046FE /* ImageCollectionViewCell.swift in Sources */,
+				65CDC2251D9B84FE00D046FE /* PlaceDetailViewController.swift in Sources */,
 				65CDC1F41D98E8F200D046FE /* AppDelegate.swift in Sources */,
+				65CDC21E1D9918D800D046FE /* MapViewController.swift in Sources */,
 				65CDC2161D99008900D046FE /* DataService.swift in Sources */,
+				65CDC2231D9A5B0700D046FE /* MarkerInforView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

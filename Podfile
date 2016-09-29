@@ -9,6 +9,8 @@ target 'Locus' do
   pod 'Firebase'
   pod 'Firebase/Auth'
   pod 'Firebase/Database'
+  pod 'GoogleMaps'
+  pod 'GooglePlaces'
 
 
 end

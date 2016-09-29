@@ -8,6 +8,8 @@
 
 import UIKit
 import Firebase
+import GoogleMaps
+import GooglePlaces
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -21,6 +23,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
         
+        GMSServices.provideAPIKey("AIzaSyB-RSXnfsq7BWG1tdcsleWiw5ekXzR1KRQ")
+        GMSPlacesClient.provideAPIKey("AIzaSyB-RSXnfsq7BWG1tdcsleWiw5ekXzR1KRQ")
+        
         // if this key exist in userDefault
         if let _ = NSUserDefaults.standardUserDefaults().objectForKey("userUID") as? String{
             
@@ -33,7 +38,39 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
         }
         
+        autocompleteStyling()
+        
         return true
+    }
+    
+    func autocompleteStyling(){
+        // Define some colors.
+        let scooter = UIColor.init(red: 37/255, green: 183/255, blue: 211/255, alpha: 1)
+        let lightGray = UIColor.lightGrayColor()
+        // Navigation bar background.
+        UINavigationBar.appearance().barTintColor = scooter
+        UINavigationBar.appearance().tintColor = UIColor.whiteColor()
+        // Color of typed text in the search bar.
+        let searchBarTextAttributes = [NSForegroundColorAttributeName: lightGray, NSFontAttributeName: UIFont.systemFontOfSize(UIFont.systemFontSize())]
+        UITextField.appearanceWhenContainedInInstancesOfClasses([UISearchBar.self]).defaultTextAttributes = searchBarTextAttributes
+        
+        // Color of the placeholder text in the search bar prior to text entry.
+        let placeholderAttributes = [NSForegroundColorAttributeName: lightGray, NSFontAttributeName: UIFont.systemFontOfSize(UIFont.systemFontSize())]
+        // Color of the default search text.
+        // NOTE: In a production scenario, "Search" would be a localized string.
+        let attributedPlaceholder = NSAttributedString(string: "Search", attributes: placeholderAttributes)
+        UITextField.appearanceWhenContainedInInstancesOfClasses([UISearchBar.self]).attributedPlaceholder = attributedPlaceholder
+        // Color of the in-progress spinner.
+        UIActivityIndicatorView.appearance().color = lightGray
+        // To style the two image icons in the search bar (the magnifying glass
+        // icon and the 'clear text' icon), replace them with different images.
+        //        UISearchBar.appearance().setImage(UIImage(named: "custom_clear_x_high")!, forSearchBarIcon: .Clear , state: .Highlighted)
+        //        UISearchBar.appearance().setImage(UIImage(named: "custom_clear_x")!, forSearchBarIcon: .Clear, state: .Normal)
+        //        UISearchBar.appearance().setImage(UIImage(named: "custom_search")!, forSearchBarIcon: .Search, state: .Normal)
+        // Color of selected table cells.
+        let selectedBackgroundView = UIView()
+        selectedBackgroundView.backgroundColor = UIColor.lightGrayColor()
+        UITableViewCell.appearanceWhenContainedInInstancesOfClasses([GMSAutocompleteViewController.self]).selectedBackgroundView = selectedBackgroundView
     }
     
     
