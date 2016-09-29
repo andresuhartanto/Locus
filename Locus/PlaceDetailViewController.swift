@@ -44,9 +44,9 @@ class PlaceDetailViewController: UIViewController, UICollectionViewDelegate, UIC
         
         defaultNavigationBar = self.navigationController?.navigationBar
         
-//        self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
+        //        self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
         self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
-
+        
         title = place?.name
         
         let image = getNavigationBarImageWith(0.0)
@@ -95,17 +95,17 @@ class PlaceDetailViewController: UIViewController, UICollectionViewDelegate, UIC
                 // TODO: handle the error.
                 print("Error: \(error.description)")
             } else {
-                if let firstPhoto = photos?.results.first {
+                if let firstPhoto = photos?.results {
                     self.loadImageForMetadata(firstPhoto)
                 }
             }
         }
     }
     
-    func loadImageForMetadata(photoMetadata: GMSPlacePhotoMetadata) {
+    func loadImageForMetadata(photoMetadata: [GMSPlacePhotoMetadata]) {
         
-//        for photo in photoMetadata{
-            GMSPlacesClient.sharedClient().loadPlacePhoto(photoMetadata, callback: { (photo, error) in
+        for (index, photo) in photoMetadata.enumerate() where index < 3{
+            GMSPlacesClient.sharedClient().loadPlacePhoto(photo, callback: { (photo, error) in
                 if let error = error {
                     // TODO: handle the error.
                     print("Error: \(error.description)")
@@ -113,9 +113,8 @@ class PlaceDetailViewController: UIViewController, UICollectionViewDelegate, UIC
                     self.images.append(photo!)
                     self.collectionView.reloadData()
                 }
-                
             })
-//        }
+        }
         
     }
     
