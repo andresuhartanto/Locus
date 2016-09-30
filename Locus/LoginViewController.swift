@@ -164,6 +164,14 @@ class LoginViewController: UIViewController {
     
     @IBAction func unwindToThisViewController(segue: UIStoryboardSegue) {
         
+        usernameTextField.delegate = self
+        passwordTextField.delegate = self
+        
+        self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(LoginViewController.dismissKeyboard)))
+    }
+    func dismissKeyboard() {
+        usernameTextField.resignFirstResponder()
+        passwordTextField.resignFirstResponder()
     }
     
     @IBAction func onSegmentedPress(sender: UISegmentedControl) {

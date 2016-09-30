@@ -11,6 +11,9 @@ target 'Locus' do
   pod 'Firebase/Database'
   pod 'GoogleMaps'
   pod 'GooglePlaces'
+  pod 'Fusuma'
+  pod 'Firebase/Storage'
+  pod 'SDWebImage'
 
 
 end
