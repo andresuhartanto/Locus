@@ -9,6 +9,9 @@ target 'Locus' do
   pod 'Firebase'
   pod 'Firebase/Auth'
   pod 'Firebase/Database'
+  pod 'Fusuma'
+  pod 'Firebase/Storage'
+  pod 'SDWebImage'
 
 
 end
