@@ -10,7 +10,7 @@ import UIKit
 import FirebaseAuth
 import FBSDKLoginKit
 
-class LoginViewController: UIViewController {
+class LoginViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet weak var forgotDetailButton: UIButton!
     
@@ -164,13 +164,14 @@ class LoginViewController: UIViewController {
     
     @IBAction func unwindToThisViewController(segue: UIStoryboardSegue) {
         
-        usernameTextField.delegate = self
+        emailTextField.delegate = self
         passwordTextField.delegate = self
         
         self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(LoginViewController.dismissKeyboard)))
     }
+    
     func dismissKeyboard() {
-        usernameTextField.resignFirstResponder()
+        emailTextField.resignFirstResponder()
         passwordTextField.resignFirstResponder()
     }
     

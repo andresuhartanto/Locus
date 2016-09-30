@@ -40,6 +40,7 @@ class User{
         }
         
     }
+    
     class func signIn (uid: String){
         //storing the uid of the person in the phone's default settings.
         NSUserDefaults.standardUserDefaults().setValue(uid, forKeyPath: "uid")

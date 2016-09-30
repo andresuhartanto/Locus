@@ -53,20 +53,27 @@ class ProfileTableViewController: UITableViewController,StaticHeaderDelegate, Fu
     
     func retrieveData(){
         
-            DataService.usersRef.child(User.currentUserUid()!).observeSingleEventOfType(.Value, withBlock: { userSnapshot in
-                if let user = User(snapshot: userSnapshot){
-                    self.header?.nameLabel.text = user.username
-                    if let userImageUrl = user.backgroundImage, userImageUrl2 = user.profileImage{
-                        
-                        let url = NSURL(string: userImageUrl)
-                        let url2 = NSURL(string: userImageUrl2)
-                        self.header?.backgroundImage.sd_setImageWithURL(url)
-                        self.header?.profileImage.sd_setImageWithURL(url2)
-                    }
+        guard let currentUserID = User.currentUserUid() else {
+            // show alert or force user to logout
+            // so it can login again
+            return
+        }
+        
+        
+        DataService.usersRef.child(currentUserID).observeSingleEventOfType(.Value, withBlock: { userSnapshot in
+            if let user = User(snapshot: userSnapshot){
+                self.header?.nameLabel.text = user.username
+                if let userImageUrl = user.backgroundImage, userImageUrl2 = user.profileImage{
                     
+                    let url = NSURL(string: userImageUrl)
+                    let url2 = NSURL(string: userImageUrl2)
+                    self.header?.backgroundImage.sd_setImageWithURL(url)
+                    self.header?.profileImage.sd_setImageWithURL(url2)
                 }
                 
-            })
+            }
+            
+        })
         
     }
     
