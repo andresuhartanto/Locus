@@ -19,8 +19,6 @@ class PlaceDetailViewController: UIViewController, UICollectionViewDelegate, UIC
     @IBOutlet weak var phoneNumberLabel: UILabel!
     @IBOutlet weak var websiteLabel: UILabel!
     
-    
-    
     var place: GMSPlace?
     var images = [UIImage]()
     var defaultNavigationBar : UINavigationBar?
@@ -30,7 +28,7 @@ class PlaceDetailViewController: UIViewController, UICollectionViewDelegate, UIC
         
         nameLabel.text = place?.name
         addresLabel.text = place?.formattedAddress
-        BusinesshourLabel.text = "open"
+        BusinesshourLabel.text = "Open"
         phoneNumberLabel.text = place?.phoneNumber
         
         let website = place?.website
@@ -44,7 +42,6 @@ class PlaceDetailViewController: UIViewController, UICollectionViewDelegate, UIC
         
         defaultNavigationBar = self.navigationController?.navigationBar
         
-        //        self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
         self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
         
         title = place?.name
@@ -115,7 +112,6 @@ class PlaceDetailViewController: UIViewController, UICollectionViewDelegate, UIC
                 }
             })
         }
-        
     }
     
     func scrollViewDidScroll(scrollView: UIScrollView) {
