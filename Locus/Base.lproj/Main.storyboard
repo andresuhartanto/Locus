@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="zTG-hr-lRz">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15G1004" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="zTG-hr-lRz">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -155,6 +155,9 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xqm-IU-YKC">
                                 <rect key="frame" x="281" y="294" width="38" height="30"/>
                                 <state key="normal" title="Login"/>
+                                <connections>
+                                    <action selector="loginOnPressedButton:" destination="9tZ-gr-tUm" eventType="touchUpInside" id="XWr-cz-9Us"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EsK-bm-U1h">
                                 <rect key="frame" x="221" y="550" width="159" height="30"/>
@@ -204,7 +207,9 @@
                     </view>
                     <navigationItem key="navigationItem" id="Dco-8v-3f8"/>
                     <connections>
-                        <segue destination="n2t-h9-Nua" kind="presentation" id="h2E-Om-8pa"/>
+                        <outlet property="passwordTextField" destination="C4Y-zO-UOG" id="NKv-UG-2VE"/>
+                        <outlet property="usernameTextField" destination="Xk5-8w-tvZ" id="a9O-1H-Obz"/>
+                        <segue destination="n2t-h9-Nua" kind="presentation" identifier="HomeSegue" id="h2E-Om-8pa"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nnF-Bc-ueE" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -239,6 +244,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="3iC-N2-6Bg"/>
+        <segue reference="h2E-Om-8pa"/>
     </inferredMetricsTieBreakers>
 </document>

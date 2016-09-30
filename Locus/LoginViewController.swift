@@ -7,29 +7,53 @@
 //
 
 import UIKit
+import Firebase
 
-class LoginViewController: UIViewController {
+class LoginViewController: UIViewController, UITextFieldDelegate {
 
+    @IBOutlet weak var usernameTextField: UITextField!
+    @IBOutlet weak var passwordTextField: UITextField!
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-    }
-
-    @IBAction func unwindToThisViewController(segue: UIStoryboardSegue) {
         
+        usernameTextField.delegate = self
+        passwordTextField.delegate = self
+        
+        self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(LoginViewController.dismissKeyboard)))
+    }
+    func dismissKeyboard() {
+        usernameTextField.resignFirstResponder()
+        passwordTextField.resignFirstResponder()
     }
     
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
-    */
-
+    
+    @IBAction func loginOnPressedButton(sender: AnyObject) {
+    
+    guard let email = usernameTextField.text, let password = passwordTextField.text else {
+        return
+        }
+        FIRAuth.auth()?.signInWithEmail(email, password: password) { (user, error) in
+            if let person = user {
+                
+                NSUserDefaults.standardUserDefaults().setObject((user!.uid), forKey: "userUID")
+                User.signIn(person.uid)
+                self.performSegueWithIdentifier("HomeSegue", sender: nil)
+            
+            }else {
+                let controller = UIAlertController(title: "Registration Failed", message: error?.localizedDescription, preferredStyle: .Alert)
+                let dismissButton = UIAlertAction(title: "Try Again", style: .Default, handler: nil)
+            
+                controller.addAction(dismissButton)
+        
+                self.presentViewController(controller, animated: true, completion: nil)
+            }
+        }
+    }
+    
+    @IBAction func unwindToThisViewController(segue: UIStoryboardSegue) {
+    }
 }

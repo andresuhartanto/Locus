@@ -9,10 +9,14 @@
 import UIKit
 import Foundation
 
-class StaticFriendCell: UITableViewCell {
+class StaticFollowingCell: UITableViewCell {
 
 
     @IBOutlet weak var profileImage: UIImageView!
+
     @IBOutlet weak var nameLabel: UILabel!
     
+    @IBAction func followingOnButtonPressed(sender: AnyObject) {
+    }
+
 }
