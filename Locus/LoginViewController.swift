@@ -47,6 +47,12 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         signupButton.hidden = true
         facebookSignup.hidden = true
         
+        emailTextField.delegate = self
+        passwordTextField.delegate = self
+        nameTextField.delegate = self
+        
+        self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(LoginViewController.dismissKeyboard)))
+        
     }
     
     @IBAction func onSignUpButtonPressed(sender: UIButton) {
@@ -62,6 +68,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                 
                 // stores into user defaults under key userUID, the user's
                 NSUserDefaults.standardUserDefaults().setObject((user.uid), forKey: "userUID")
+                User.signIn(user.uid)
                 
                 self.performSegueWithIdentifier("HomeSegue", sender: nil)
                 
@@ -82,6 +89,33 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             }
         })
     }
+    
+    
+    @IBAction func onSignInButtonPressed(sender: UIButton) {
+        
+        guard let email = emailTextField.text, let password = passwordTextField.text else {
+            return
+        }
+        FIRAuth.auth()?.signInWithEmail(email, password: password) { (user, error) in
+            if let person = user {
+                
+                NSUserDefaults.standardUserDefaults().setObject((user!.uid), forKey: "userUID")
+                User.signIn(person.uid)
+                self.performSegueWithIdentifier("HomeSegue", sender: nil)
+                
+            }else {
+                let controller = UIAlertController(title: "Registration Failed", message: error?.localizedDescription, preferredStyle: .Alert)
+                let dismissButton = UIAlertAction(title: "Try Again", style: .Default, handler: nil)
+                
+                controller.addAction(dismissButton)
+                
+                self.presentViewController(controller, animated: true, completion: nil)
+            }
+        }
+        
+    }
+    
+    
     
     @IBAction func onFacebookSigninButton(sender: UIButton) {
         facebookLogin()
@@ -164,15 +198,19 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     @IBAction func unwindToThisViewController(segue: UIStoryboardSegue) {
         
-        emailTextField.delegate = self
-        passwordTextField.delegate = self
         
-        self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(LoginViewController.dismissKeyboard)))
     }
     
     func dismissKeyboard() {
         emailTextField.resignFirstResponder()
         passwordTextField.resignFirstResponder()
+        nameTextField.resignFirstResponder()
+    }
+    
+    
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
     
     @IBAction func onSegmentedPress(sender: UISegmentedControl) {

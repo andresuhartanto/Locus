@@ -31,6 +31,8 @@ class PlaceDetailViewController: UIViewController, UICollectionViewDelegate, UIC
         BusinesshourLabel.text = "Open"
         phoneNumberLabel.text = place?.phoneNumber
         
+        
+        
         let website = place?.website
         if website != nil{
             websiteLabel.text = place?.website?.absoluteString

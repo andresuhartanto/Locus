@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 protocol StaticHeaderDelegate {
     func openFusuma(selectedImage: String)
@@ -58,6 +59,24 @@ class StaticHeader: UIView{
     func followingTap(){
         self.delegate.goToFriendPage()
     }
+    
+    @IBAction func onLogOutButtonPressed(sender: UIButton) {
+        try! FIRAuth.auth()?.signOut()
+
+        NSUserDefaults.standardUserDefaults().removeObjectForKey("userUID")
+        
+        
+        goBackToLogin()
+        
+        }
+    
+    func goBackToLogin(){
+        let appDelegateTemp = UIApplication.sharedApplication().delegate!
+        let storyboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+        let LogInViewController = storyboard.instantiateInitialViewController()
+        appDelegateTemp.window?!.rootViewController = LogInViewController
+    }
+    
 
     @IBOutlet weak var followOnButtonPressed: UIButton!
 
