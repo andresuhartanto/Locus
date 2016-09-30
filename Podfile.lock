@@ -52,8 +52,11 @@ DEPENDENCIES:
   - Firebase
   - Firebase/Auth
   - Firebase/Database
+  - Firebase/Storage
+  - Fusuma
   - GoogleMaps
   - GooglePlaces
+  - SDWebImage
 
 SPEC CHECKSUMS:
   Firebase: 34187200ef4979dbd485c7aa685ef078bf587c86
@@ -71,6 +74,6 @@ SPEC CHECKSUMS:
   GoogleUtilities: 56c5ac05b7aa5dc417a1bb85221a9516e04d7032
   SDWebImage: 098e97e6176540799c27e804c96653ee0833d13c
 
-PODFILE CHECKSUM: 7cec85b32092c40e8f2e9220d7d7dc05571129ef
+PODFILE CHECKSUM: e7a2e61082843a235b757ed9d8a35d054b76da09
 
 COCOAPODS: 1.0.1
