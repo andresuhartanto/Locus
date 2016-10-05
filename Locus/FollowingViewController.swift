@@ -15,33 +15,37 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
     
     @IBOutlet weak var tableView: UITableView!
     var listOfFollowing = [User]()
-
+    var userProfile:String!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         tableView.delegate = self
         tableView.dataSource = self
         
-        DataService.usersRef.observeEventType(.Value, withBlock: { usersSnapshot in
-            for userSnapshot in usersSnapshot.children.allObjects {
-                if let user = User(snapshot: userSnapshot as! FIRDataSnapshot){
-                    self.listOfFollowing.append(user)
-                    
-                    for (index,i) in self.listOfFollowing.enumerate(){
-                        if i.uid == User.currentUserUid(){
-                            self.listOfFollowing.removeAtIndex(index)
-                        }
+        guard let currentUserID = self.userProfile else{
+            return
+        }
+        
+        DataService.usersRef.child(currentUserID).child("following").observeSingleEventOfType(.Value, withBlock: { snapshot in
+            if snapshot.hasChildren(){
+                let keyArray = snapshot.value?.allKeys as! [String]
+                    for key in keyArray{
+                        DataService.usersRef.child(key).observeSingleEventOfType(.Value, withBlock: { userSnapshot in
+                            if let users = User(snapshot: userSnapshot){
+                                self.listOfFollowing.append(users)
+                                
+                                for i in self.listOfFollowing{
+                                    if i.uid == User.currentUserUid(){
+                                        i.isMyself = true
+                                    }
+                                }
+                                self.tableView.reloadData()
+                            }
+                        })
                     }
-                    
-                    self.tableView.reloadData()
-                    print("added")
                 }
-            }
-            
         })
-        
-        
-        
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -49,9 +53,12 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    
         let cell:StaticFollowingCell = tableView.dequeueReusableCellWithIdentifier("FollowingCell") as! StaticFollowingCell
+
         let user = listOfFollowing[indexPath.row]
-        
+    
+        cell.user = user
         cell.nameLabel.text = user.username
         if let userImageUrl = user.profileImage{
             
@@ -60,7 +67,65 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
             cell.profileImage.layer.cornerRadius = (cell.profileImage.frame.size.width)/2
             cell.profileImage.clipsToBounds = true
         }
-        
+    
+    
+
+    DataService.usersRef.child(User.currentUserUid()!).child("following").observeEventType(.Value, withBlock: { snapshot in
+
+        if user.isMyself{
+            cell.followingButton.hidden = true
+        }else if snapshot.hasChild(user.uid!){
+            
+            cell.followingButton.backgroundColor = UIColor.greenColor()
+            cell.followingButton.setTitle("Following", forState: .Normal)
+            cell.followingButton.layer.cornerRadius = 5
+            cell.followingButton.layer.borderWidth = 1
+            cell.checker = true
+            
+        }else{
+            cell.followingButton.backgroundColor = UIColor.clearColor()
+            cell.followingButton.setTitle("Follow", forState: .Normal)
+            cell.followingButton.layer.cornerRadius = 5
+            cell.followingButton.layer.borderWidth = 1
+            cell.checker = false
+        }
+    })
+    
         return cell
     }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        let user = listOfFollowing[indexPath.row]
+        self.userProfile = user.uid
+        self.performSegueWithIdentifier("UserSegue", sender: self)
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "UserSegue"{
+            let nextScene = segue.destinationViewController as! UsersTableViewController
+            nextScene.userProfile = self.userProfile
+        }
+    }
+
 }
+
+
+
+
+
+//
+//        DataService.usersRef.child("following").observeEventType(.Value, withBlock: { usersSnapshot in
+//            for userSnapshot in usersSnapshot.children.allObjects {
+//                if let user = User(snapshot: userSnapshot as! FIRDataSnapshot){
+//                    self.listOfFollowing.append(user)
+//
+//                    for (index,i) in self.listOfFollowing.enumerate(){
+//                        if i.uid == User.currentUserUid(){
+//                            self.listOfFollowing.removeAtIndex(index)
+//                        }
+//                    }
+//
+//                    self.tableView.reloadData()
+//                }
+//            }
+//        })

@@ -11,19 +11,26 @@ import FirebaseDatabase
 import Fusuma
 import FirebaseStorage
 import SDWebImage
+import GooglePlaces
 
 
 
-class ProfileTableViewController: UITableViewController,StaticHeaderDelegate, FusumaDelegate {
+class ProfileTableViewController: UITableViewController, StaticHeaderDelegate, FusumaDelegate, StaticUserHeaderDelegate {
     
     enum ImageSelected {
         case Background
         case Profile
     }
     
-    var listOfUser = [Profile]()
+    var listOfUser = [Place]()
     var cameraShown:Bool = false
     var fusumaSetting: ImageSelected?
+    var userProfile: String!
+    var select:Bool = true
+    var listOfImage = [UIImage]()
+    var image: UIImage!
+
+    
     
     let header = NSBundle.mainBundle().loadNibNamed("StaticHeader", owner: 0, options: nil)[0] as? StaticHeader
     
@@ -32,13 +39,13 @@ class ProfileTableViewController: UITableViewController,StaticHeaderDelegate, Fu
         super.viewDidLoad()
 
         navigation()
-        retrieveData()
-
-
+        retrieveHeaderData()
+        retrievePlaceData()
+        self.header?.followButtonPressed.hidden = true
+        
     }
     
     func navigation(){
-        
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), forBarMetrics: .Default)
         self.navigationController?.navigationBar.shadowImage = UIImage()
         self.navigationController?.navigationBar.translucent = true
@@ -48,17 +55,29 @@ class ProfileTableViewController: UITableViewController,StaticHeaderDelegate, Fu
         self.header?.profileImage.layer.masksToBounds = true
         self.header?.profileImage.layer.borderWidth = 2.0
         self.header?.profileImage.layer.borderColor = UIColor.whiteColor().CGColor
-        
     }
     
-    func retrieveData(){
-        
+    func retrievePlaceData(){
+        DataService.placesRef.observeEventType(.ChildAdded, withBlock: { placeSnapshot in
+            if let place = Place(snapshot:placeSnapshot){
+                DataService.usersRef.child(place.userUID!).observeSingleEventOfType(.Value, withBlock: {userSnapshot in
+                    if let user = User(snapshot:userSnapshot){
+                        place.userUID = user.userUID
+                        self.listOfUser.append(place)
+                        self.loadFirstPhotoForPlace(place.placeID!)
+                        self.tableView.reloadData()
+                    }
+                })
+            }
+        })
+    }
+    
+    func retrieveHeaderData(){
         guard let currentUserID = User.currentUserUid() else {
             // show alert or force user to logout
             // so it can login again
             return
         }
-        
         
         DataService.usersRef.child(currentUserID).observeSingleEventOfType(.Value, withBlock: { userSnapshot in
             if let user = User(snapshot: userSnapshot){
@@ -75,10 +94,34 @@ class ProfileTableViewController: UITableViewController,StaticHeaderDelegate, Fu
             
         })
         
+        DataService.usersRef.child(User.currentUserUid()!).child("follower").observeEventType(.Value, withBlock: { snapshot in
+            self.header?.followerCount.text = String(snapshot.childrenCount)
+        })
+        DataService.usersRef.child(User.currentUserUid()!).child("following").observeEventType(.Value, withBlock: { snapshot in
+            self.header?.followingCount.text = String(snapshot.childrenCount)
+        })
     }
     
-    func goToFriendPage() {
+    func goToFollowerPage() {
+        self.performSegueWithIdentifier("FollowerSegue", sender: self)
+
+    }
+    
+    func goToFollowingPage() {
         self.performSegueWithIdentifier("FollowingSegue", sender: self)
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "FollowingSegue"{
+            let nextScene = segue.destinationViewController as! FollowingViewController
+            nextScene.userProfile = User.currentUserUid()
+        }else if segue.identifier == "LocationSegue"{
+            let nextScene = segue.destinationViewController as! LocationViewController
+            nextScene.image = self.image
+        }else if segue.identifier == "FollowerSegue"{
+            let nextScene = segue.destinationViewController as! FollowerViewController
+            nextScene.userProfile = User.currentUserUid()
+        }
     }
     
     func openFusuma(selectedImage: String) {
@@ -172,9 +215,39 @@ class ProfileTableViewController: UITableViewController,StaticHeaderDelegate, Fu
         
     }
     
+    func loadFirstPhotoForPlace(placeID: String) {
+        
+        GMSPlacesClient.sharedClient().lookUpPhotosForPlaceID(placeID) { (photos, error) -> Void in
+            if let error = error {
+                // TODO: handle the error.
+                print("Error: \(error.description)")
+            } else {
+                if let photos = photos?.results {
+                    self.loadImageForMetadata(photos)
+                }
+            }
+        }
+    }
+    
+    func loadImageForMetadata(photoMetadata: [GMSPlacePhotoMetadata]) {
+        
+        for (index, photo) in photoMetadata.enumerate() where index < 1{
+            GMSPlacesClient.sharedClient().loadPlacePhoto(photo, callback: { (photo, error) in
+                if let error = error {
+                    // TODO: handle the error.
+                    print("Error: \(error.description)")
+                } else {
+                    self.listOfImage.append(photo!)
+                    self.tableView.reloadData()
+                }
+            })
+        }
+    }
+    
     override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
         header?.delegate = self
+        header?.userDelegate = self
         return header
     }
     
@@ -182,18 +255,31 @@ class ProfileTableViewController: UITableViewController,StaticHeaderDelegate, Fu
         
         return header?.frame.height ?? 50
     }
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 1
-    }
-    
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        return listOfImage.count
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("ProfileCell")
-        cell?.textLabel?.text = "abc"
-        return cell!
+        let cell:StaticProfileCell = tableView.dequeueReusableCellWithIdentifier("ProfileCell") as! StaticProfileCell
+        let image = listOfImage[indexPath.row]
+        
+        cell.profileImageView.image = image
+        cell.profileImageView.layer.shadowOpacity = 0.7
+        cell.profileImageView.layer.shadowRadius = 10.0
+        
+        
+        return cell
     }
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        let place = listOfUser[indexPath.row]
+        self.userProfile = place.placeID
+        let image = listOfImage[indexPath.row]
+        self.image = image
+        self.performSegueWithIdentifier("LocationSegue", sender: self)
+    }
+    
+    
+
 }
