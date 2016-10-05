@@ -14,6 +14,8 @@ target 'Locus' do
   pod 'Fusuma'
   pod 'Firebase/Storage'
   pod 'SDWebImage'
+  pod 'NVActivityIndicatorView', :git => 'https://github.com/ninjaprox/NVActivityIndicatorView.git', :branch => 'swift2.3'
+  pod 'JSSAlertView'
 
 
 end

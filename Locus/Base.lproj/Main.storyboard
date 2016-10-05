@@ -143,7 +143,6 @@
                         <outlet property="signinButton" destination="xqm-IU-YKC" id="7D0-nh-P9L"/>
                         <outlet property="signupButton" destination="cOX-Xu-0Ta" id="3h9-AZ-4CT"/>
                         <segue destination="n2t-h9-Nua" kind="presentation" identifier="HomeSegue" id="h2E-Om-8pa"/>
-                        <segue destination="n2t-h9-Nua" kind="presentation" id="ZhM-Ud-Yje"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nnF-Bc-ueE" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -183,7 +182,4 @@
         <image name="Sign Up" width="241" height="50"/>
         <image name="Sign in" width="241" height="50"/>
     </resources>
-    <inferredMetricsTieBreakers>
-        <segue reference="h2E-Om-8pa"/>
-    </inferredMetricsTieBreakers>
 </document>

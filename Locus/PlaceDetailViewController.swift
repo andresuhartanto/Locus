@@ -7,21 +7,30 @@
 //
 
 import UIKit
+import GoogleMaps
 import GooglePlaces
+import FirebaseDatabase
+import NVActivityIndicatorView
+import JSSAlertView
 
-class PlaceDetailViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+class PlaceDetailViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, NVActivityIndicatorViewable {
     
     @IBOutlet weak var collectionView: UICollectionView!
-    
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var addresLabel: UILabel!
     @IBOutlet weak var BusinesshourLabel: UILabel!
     @IBOutlet weak var phoneNumberLabel: UILabel!
     @IBOutlet weak var websiteLabel: UILabel!
+    @IBOutlet weak var saveButton: UIButton!
     
     var place: GMSPlace?
     var images = [UIImage]()
     var defaultNavigationBar : UINavigationBar?
+    var saved: Bool = false
+    let aGMSGeocoder = GMSGeocoder()
+    var aSavedPlace: SavedPlace?
+    
+    var newSavedPlace: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,8 +39,6 @@ class PlaceDetailViewController: UIViewController, UICollectionViewDelegate, UIC
         addresLabel.text = place?.formattedAddress
         BusinesshourLabel.text = "Open"
         phoneNumberLabel.text = place?.phoneNumber
-        
-        
         
         let website = place?.website
         if website != nil{
@@ -52,6 +59,16 @@ class PlaceDetailViewController: UIViewController, UICollectionViewDelegate, UIC
         self.navigationController?.navigationBar.setBackgroundImage(image, forBarMetrics: .Default)
         self.navigationController?.navigationBar.shadowImage = image
         
+        toggleBasedOnSaveState()
+        
+    }
+    
+    func toggleBasedOnSaveState(){
+        if saved {
+            saveButton.setTitle("Unsave", forState: .Normal)
+        } else if saved == false {
+            saveButton.setTitle("Save", forState: .Normal)
+        }
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -81,11 +98,72 @@ class PlaceDetailViewController: UIViewController, UICollectionViewDelegate, UIC
     
     @IBAction func onCallButtonPressed(sender: UIButton) {
     }
-    @IBAction func onSaveButtonPressed(sender: UIButton) {
-    }
     @IBAction func onShareButtonPressed(sender: UIButton) {
     }
     @IBAction func onNavigateButtonPressed(sender: UIButton) {
+        performSegueWithIdentifier("RouteSegue", sender: nil)
+    }
+    @IBAction func onSaveButtonPressed(sender: UIButton) {
+        
+        if saved {
+            showRemoveAlert()
+        } else {
+            saveFunction()
+        }
+    }
+    
+    func showRemoveAlert(){
+        let alertview = JSSAlertView().show(
+            self,
+            title: "Remove?",
+            text: "Are you sure you want to unsave this location?",
+            color: UIColorFromHex(0xFF1744, alpha: 1),
+            iconImage: UIImage(named: "remove-symbol"),
+            buttonText: "Yes",
+            cancelButtonText: "Cancel" // This tells JSSAlertView to create a two-button alert
+        )
+        alertview.setTextTheme(.Light)
+        alertview.addAction(removeFunction)
+    }
+    
+    func saveFunction(){
+        aGMSGeocoder.reverseGeocodeCoordinate(place!.coordinate) { (response, error) in
+            
+            guard let aGMSAddress = response!.firstResult() else { return }
+            
+            let placeDict = ["placeID": self.place!.placeID,
+                             "name": self.place!.name,
+                             "locality": aGMSAddress.locality!,
+                             "longitude": self.place!.coordinate.longitude,
+                             "latitude": self.place!.coordinate.latitude,
+                             "userUID": User.currentUserUid()!]
+            let placeRef = DataService.rootRef.child("Place").childByAutoId()
+            placeRef.updateChildValues(placeDict as [NSObject : AnyObject])
+            
+            DataService.usersRef.child(User.currentUserUid()!).child("savedPlace").updateChildValues([placeRef.key: true])
+            self.newSavedPlace = placeRef.key
+            self.saved = true
+            self.toggleBasedOnSaveState()
+        }
+        
+        let alerView = JSSAlertView().show(self, title: "Saved", text: "This location has been saved!", color: UIColorFromHex(0x2ecc71, alpha: 1), iconImage: UIImage(named: "checked"))
+        alerView.setTextTheme(.Light)
+        
+    }
+    
+    func removeFunction(){
+        if let placeKey = self.aSavedPlace?.placeKey {
+            DataService.rootRef.child("Place").child(placeKey).removeValue()
+            DataService.usersRef.child(User.currentUserUid()!).child("savedPlace").child(placeKey).removeValue()
+            self.aSavedPlace?.placeKey = nil
+            self.saved = false
+            self.toggleBasedOnSaveState()
+        } else if let placeKey = self.newSavedPlace {
+            DataService.rootRef.child("Place").child(placeKey).removeValue()
+            DataService.usersRef.child(User.currentUserUid()!).child("savedPlace").child(placeKey).removeValue()
+            self.saved = false
+            self.toggleBasedOnSaveState()
+        }
     }
     
     func loadFirstPhotoForPlace(placeID: String) {
@@ -94,8 +172,8 @@ class PlaceDetailViewController: UIViewController, UICollectionViewDelegate, UIC
                 // TODO: handle the error.
                 print("Error: \(error.description)")
             } else {
-                if let firstPhoto = photos?.results {
-                    self.loadImageForMetadata(firstPhoto)
+                if let photos = photos?.results {
+                    self.loadImageForMetadata(photos)
                 }
             }
         }
@@ -127,6 +205,7 @@ class PlaceDetailViewController: UIViewController, UICollectionViewDelegate, UIC
             self.navigationController?.navigationBar.setBackgroundImage(image, forBarMetrics: .Default)
             self.navigationController?.navigationBar.shadowImage = image
         }
+        scrollView.indicatorStyle = UIScrollViewIndicatorStyle.White
     }
     
 }

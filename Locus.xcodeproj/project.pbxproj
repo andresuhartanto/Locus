@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		0F597A06B9A20ECFD76425E6 /* Pods_Locus.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BED38DEEF7DBE6FA5DA54C8 /* Pods_Locus.framework */; };
+		65AFED691DA242920074F0C5 /* RouteMapView.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65AFED681DA242920074F0C5 /* RouteMapView.storyboard */; };
+		65AFED6B1DA2435A0074F0C5 /* RouteMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AFED6A1DA2435A0074F0C5 /* RouteMapViewController.swift */; };
+		65AFED6D1DA25C690074F0C5 /* SavedPlace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AFED6C1DA25C690074F0C5 /* SavedPlace.swift */; };
 		65CDC1F41D98E8F200D046FE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CDC1F31D98E8F200D046FE /* AppDelegate.swift */; };
 		65CDC1F91D98E8F200D046FE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65CDC1F71D98E8F200D046FE /* Main.storyboard */; };
 		65CDC1FB1D98E8F200D046FE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 65CDC1FA1D98E8F200D046FE /* Assets.xcassets */; };
@@ -38,6 +41,9 @@
 /* Begin PBXFileReference section */
 		1C25B4A9A130D33DEFD91ACB /* Pods-Locus.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Locus.release.xcconfig"; path = "Pods/Target Support Files/Pods-Locus/Pods-Locus.release.xcconfig"; sourceTree = "<group>"; };
 		1D08B1FB398FD5ECE66FA164 /* Pods-Locus.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Locus.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Locus/Pods-Locus.debug.xcconfig"; sourceTree = "<group>"; };
+		65AFED681DA242920074F0C5 /* RouteMapView.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = RouteMapView.storyboard; sourceTree = "<group>"; };
+		65AFED6A1DA2435A0074F0C5 /* RouteMapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteMapViewController.swift; sourceTree = "<group>"; };
+		65AFED6C1DA25C690074F0C5 /* SavedPlace.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SavedPlace.swift; sourceTree = "<group>"; };
 		65CDC1F01D98E8F200D046FE /* Locus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Locus.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		65CDC1F31D98E8F200D046FE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		65CDC1F81D98E8F200D046FE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -110,6 +116,7 @@
 				A4A9512A1D9A248E009EC2DD /* ProfileTableViewController.swift */,
 				A4A951401D9CC3C9009EC2DD /* StaticFollowingCell.swift */,
 				A4A9513A1D9A9F19009EC2DD /* User.swift */,
+				65AFED6C1DA25C690074F0C5 /* SavedPlace.swift */,
 				A4A9512C1D9A2576009EC2DD /* Profile.swift */,
 				A4A951361D9A2DB4009EC2DD /* StaticHeader.swift */,
 				A40C98A01D9E2B77001F5A04 /* FollowingViewController.swift */,
@@ -118,6 +125,7 @@
 				65CDC21D1D9918D800D046FE /* MapViewController.swift */,
 				65CDC2241D9B84FE00D046FE /* PlaceDetailViewController.swift */,
 				65CDC2261D9B852400D046FE /* ImageCollectionViewCell.swift */,
+				65AFED6A1DA2435A0074F0C5 /* RouteMapViewController.swift */,
 				65CDC1FA1D98E8F200D046FE /* Assets.xcassets */,
 				65CDC20E1D98F26B00D046FE /* Storyboards */,
 				65CDC2211D9A5AC800D046FE /* Marker View */,
@@ -141,6 +149,7 @@
 			children = (
 				65CDC1F71D98E8F200D046FE /* Main.storyboard */,
 				65CDC2171D99032500D046FE /* MapView.storyboard */,
+				65AFED681DA242920074F0C5 /* RouteMapView.storyboard */,
 				65CDC2191D99042F00D046FE /* Profile.storyboard */,
 				65CDC21B1D99044900D046FE /* PlaceDetail.storyboard */,
 				65CDC1FC1D98E8F200D046FE /* LaunchScreen.storyboard */,
@@ -245,6 +254,7 @@
 				65CDC2061D98E94600D046FE /* GoogleService-Info.plist in Resources */,
 				65CDC21C1D99044900D046FE /* PlaceDetail.storyboard in Resources */,
 				65CDC2201D9A5A8A00D046FE /* MarkerInfoView.xib in Resources */,
+				65AFED691DA242920074F0C5 /* RouteMapView.storyboard in Resources */,
 				65CDC1FB1D98E8F200D046FE /* Assets.xcassets in Resources */,
 				65CDC2181D99032500D046FE /* MapView.storyboard in Resources */,
 				65CDC1F91D98E8F200D046FE /* Main.storyboard in Resources */,
@@ -315,8 +325,10 @@
 				65CDC2271D9B852400D046FE /* ImageCollectionViewCell.swift in Sources */,
 				65CDC2251D9B84FE00D046FE /* PlaceDetailViewController.swift in Sources */,
 				65CDC1F41D98E8F200D046FE /* AppDelegate.swift in Sources */,
+				65AFED6D1DA25C690074F0C5 /* SavedPlace.swift in Sources */,
 				65CDC21E1D9918D800D046FE /* MapViewController.swift in Sources */,
 				65CDC2161D99008900D046FE /* DataService.swift in Sources */,
+				65AFED6B1DA2435A0074F0C5 /* RouteMapViewController.swift in Sources */,
 				A4A951371D9A2DB4009EC2DD /* StaticHeader.swift in Sources */,
 				65CDC2231D9A5B0700D046FE /* MarkerInforView.swift in Sources */,
 			);
