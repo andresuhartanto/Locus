@@ -28,10 +28,10 @@
 		65CDC2231D9A5B0700D046FE /* MarkerInforView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CDC2221D9A5B0700D046FE /* MarkerInforView.swift */; };
 		65CDC2251D9B84FE00D046FE /* PlaceDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CDC2241D9B84FE00D046FE /* PlaceDetailViewController.swift */; };
 		65CDC2271D9B852400D046FE /* ImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CDC2261D9B852400D046FE /* ImageCollectionViewCell.swift */; };
+		65CEF7A31DA522CB00DD2BEA /* Profile.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65CEF7A21DA522CB00DD2BEA /* Profile.storyboard */; };
 		A40C98A11D9E2B77001F5A04 /* FollowingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40C98A01D9E2B77001F5A04 /* FollowingViewController.swift */; };
 		A40C98A51DA182D5001F5A04 /* FollowerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40C98A41DA182D5001F5A04 /* FollowerViewController.swift */; };
 		A40C98A71DA23112001F5A04 /* StaticFollowerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40C98A61DA23112001F5A04 /* StaticFollowerCell.swift */; };
-		A40C98AD1DA25208001F5A04 /* .. in Resources */ = {isa = PBXBuildFile; fileRef = A40C98AC1DA25208001F5A04 /* .. */; };
 		A40C98AF1DA25A93001F5A04 /* UsersTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40C98AE1DA25A93001F5A04 /* UsersTableViewController.swift */; };
 		A40C98B11DA40CD4001F5A04 /* StaticProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40C98B01DA40CD4001F5A04 /* StaticProfileCell.swift */; };
 		A40C98B31DA40F34001F5A04 /* Place.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40C98B21DA40F34001F5A04 /* Place.swift */; };
@@ -69,11 +69,11 @@
 		65CDC2221D9A5B0700D046FE /* MarkerInforView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkerInforView.swift; sourceTree = "<group>"; };
 		65CDC2241D9B84FE00D046FE /* PlaceDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaceDetailViewController.swift; sourceTree = "<group>"; };
 		65CDC2261D9B852400D046FE /* ImageCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCollectionViewCell.swift; sourceTree = "<group>"; };
+		65CEF7A21DA522CB00DD2BEA /* Profile.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Profile.storyboard; sourceTree = "<group>"; };
 		8BED38DEEF7DBE6FA5DA54C8 /* Pods_Locus.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Locus.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A40C98A01D9E2B77001F5A04 /* FollowingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FollowingViewController.swift; sourceTree = "<group>"; };
 		A40C98A41DA182D5001F5A04 /* FollowerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FollowerViewController.swift; sourceTree = "<group>"; };
 		A40C98A61DA23112001F5A04 /* StaticFollowerCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StaticFollowerCell.swift; sourceTree = "<group>"; };
-		A40C98AC1DA25208001F5A04 /* .. */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = folder; name = ..; path = ../..; sourceTree = "<group>"; };
 		A40C98AE1DA25A93001F5A04 /* UsersTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UsersTableViewController.swift; sourceTree = "<group>"; };
 		A40C98B01DA40CD4001F5A04 /* StaticProfileCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StaticProfileCell.swift; sourceTree = "<group>"; };
 		A40C98B21DA40F34001F5A04 /* Place.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Place.swift; sourceTree = "<group>"; };
@@ -164,7 +164,7 @@
 			children = (
 				65CDC1F71D98E8F200D046FE /* Main.storyboard */,
 				65CDC2171D99032500D046FE /* MapView.storyboard */,
-				A40C98AC1DA25208001F5A04 /* .. */,
+				65CEF7A21DA522CB00DD2BEA /* Profile.storyboard */,
 				65AFED681DA242920074F0C5 /* RouteMapView.storyboard */,
 				65CDC21B1D99044900D046FE /* PlaceDetail.storyboard */,
 				65CDC1FC1D98E8F200D046FE /* LaunchScreen.storyboard */,
@@ -264,13 +264,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				65CDC1FE1D98E8F200D046FE /* LaunchScreen.storyboard in Resources */,
+				65CEF7A31DA522CB00DD2BEA /* Profile.storyboard in Resources */,
 				A4A951391D9A39BD009EC2DD /* StaticHeader.xib in Resources */,
 				65CDC2061D98E94600D046FE /* GoogleService-Info.plist in Resources */,
 				65CDC21C1D99044900D046FE /* PlaceDetail.storyboard in Resources */,
 				65CDC2201D9A5A8A00D046FE /* MarkerInfoView.xib in Resources */,
 				65AFED691DA242920074F0C5 /* RouteMapView.storyboard in Resources */,
 				65CDC1FB1D98E8F200D046FE /* Assets.xcassets in Resources */,
-				A40C98AD1DA25208001F5A04 /* .. in Resources */,
 				65CDC2181D99032500D046FE /* MapView.storyboard in Resources */,
 				65CDC1F91D98E8F200D046FE /* Main.storyboard in Resources */,
 			);
