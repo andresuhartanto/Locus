@@ -16,6 +16,9 @@ class User{
     var userUID: String?
     var profileImage: String?
     var backgroundImage: String?
+    var follower: String?
+    var following: String?
+    var isMyself:Bool = false
 
     init?(snapshot: FIRDataSnapshot){
         
@@ -37,6 +40,16 @@ class User{
             self.backgroundImage = dictBackground
         }else{
             self.backgroundImage = ""
+        }
+        if let dictFollower = dict["follower"] as? String{
+            self.follower = dictFollower
+        }else{
+            self.follower = ""
+        }
+        if let dictFollowing = dict["following"] as? String{
+            self.following = dictFollowing
+        }else{
+            self.following = ""
         }
         
     }

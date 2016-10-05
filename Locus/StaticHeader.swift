@@ -11,22 +11,38 @@ import FirebaseAuth
 
 protocol StaticHeaderDelegate {
     func openFusuma(selectedImage: String)
-    func goToFriendPage()
+    //    func followerCount()
+    //    func followingCount()
+}
+protocol StaticUserHeaderDelegate {
+    func goToFollowingPage()
+    func goToFollowerPage()
+}
+protocol StaticButtonHeaderDelegate{
+    func followButton()
 }
 
 class StaticHeader: UIView{
     
-    var imagePost:Profile!
+    var imagePost:User!
     var delegate:StaticHeaderDelegate!
+    var userDelegate: StaticUserHeaderDelegate!
+    var buttonDelegate: StaticButtonHeaderDelegate!
 
 
-    @IBOutlet weak var backgroundImage: UIImageView!
-
-    @IBOutlet weak var profileImage: UIImageView!
+    @IBOutlet weak var locationCount: UILabel!
+    @IBOutlet weak var followingCount: UILabel!
+    @IBOutlet weak var followerCount: UILabel!
     
-    @IBOutlet weak var followingLabel: UILabel!
-
+    @IBOutlet weak var backgroundImage: UIImageView!
+    @IBOutlet weak var profileImage: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
+
+    @IBOutlet weak var followingLabel: UILabel!
+    @IBOutlet weak var followerLabel: UILabel!
+    @IBOutlet weak var locationLabel: UILabel!
+
+    @IBOutlet weak var followButtonPressed: UIButton!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -34,6 +50,7 @@ class StaticHeader: UIView{
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(loadProfile))
         let backgroundTapGesture = UITapGestureRecognizer(target: self, action: #selector(loadBackground))
         let followingTapGesture = UITapGestureRecognizer(target: self, action: #selector(followingTap))
+        let followerTapGesture = UITapGestureRecognizer(target: self, action: #selector(followerTap))
         
         profileImage.addGestureRecognizer(tapGesture)
         profileImage.userInteractionEnabled = true
@@ -44,6 +61,9 @@ class StaticHeader: UIView{
         
         followingLabel.addGestureRecognizer(followingTapGesture)
         followingLabel.userInteractionEnabled = true
+        
+        followerLabel.addGestureRecognizer(followerTapGesture)
+        followerLabel.userInteractionEnabled = true
         
     }
     
@@ -57,7 +77,10 @@ class StaticHeader: UIView{
     }
     
     func followingTap(){
-        self.delegate.goToFriendPage()
+        self.userDelegate.goToFollowingPage()
+    }
+    func followerTap(){
+        self.userDelegate.goToFollowerPage()
     }
     
     @IBAction func onLogOutButtonPressed(sender: UIButton) {
@@ -77,8 +100,9 @@ class StaticHeader: UIView{
         appDelegateTemp.window?!.rootViewController = LogInViewController
     }
     
-
-    @IBOutlet weak var followOnButtonPressed: UIButton!
+    @IBAction func followerOnPressedButton(sender: AnyObject) {
+        self.buttonDelegate.followButton()
+    }
 
     
 }
