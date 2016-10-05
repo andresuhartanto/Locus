@@ -25,6 +25,8 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     
     var place: GMSPlace?
     
+    var savedPlace = [SavedPlace]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         locationManager.delegate = self
@@ -32,7 +34,10 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         locationManager.startUpdatingLocation()
         mapView.delegate = self
         
+        
         placesClient = GMSPlacesClient.sharedClient()
+        
+        
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -46,6 +51,9 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         searchView()
+        self.savedPlace.removeAll()
+        mapView.clear()
+        getSavedPlace()
     }
     
    
@@ -103,7 +111,6 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         let placeId = marker.snippet!
         
         placesClient?.lookUpPlaceID(placeId, callback: { (place, error) in
-            
             self.place = place
             self.performSegueWithIdentifier("DetailSegue", sender: nil)
         })
@@ -114,10 +121,44 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         if segue.identifier == "DetailSegue"{
             let destination = segue.destinationViewController as! PlaceDetailViewController
             destination.place = self.place
-            
+            let placeId: String = (self.place?.placeID)!
+            // check if any of the SavedPlace have this placeID
+            for sPlace in self.savedPlace {
+                if sPlace.placeID! == placeId {
+                    destination.saved = true
+                    destination.aSavedPlace = sPlace
+                }
+            }
         }
     }
     
+    func getSavedPlace(){
+        DataService.usersRef.child(User.currentUserUid()!).child("savedPlace").observeEventType(.ChildAdded , withBlock: { (snapshot) in
+            DataService.rootRef.child("Place").child(snapshot.key).observeSingleEventOfType(.Value , withBlock: {(snap) in
+                if let savedPlace = SavedPlace.init(snapshot: snap){
+                    self.savedPlace.append(savedPlace)
+                }
+                
+                for place in self.savedPlace{
+                    self.populateMapview(place)
+                }
+            })
+        })
+    }
+    
+    func populateMapview(savedPlace: SavedPlace){
+        let latitude = savedPlace.latitude
+        let longitude = savedPlace.longitude
+        let coordinate = CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!)
+        let marker = GMSMarker(position: coordinate)
+//        let circularImage = UIImageView()
+        marker.appearAnimation = kGMSMarkerAnimationPop
+        marker.icon = UIImage(named: "placeholder-4")
+        marker.snippet = savedPlace.placeID
+        marker.title = savedPlace.name
+        
+        marker.map = mapView
+    }
 }
 
 
@@ -154,6 +195,7 @@ extension MapViewController: GMSAutocompleteResultsViewControllerDelegate {
             marker.map = mapView
         }else if marker != 0{
             mapView.clear()
+            getSavedPlace()
             marker.map = mapView
         }
     }
