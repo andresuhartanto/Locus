@@ -31,7 +31,7 @@
 		A40C98A11D9E2B77001F5A04 /* FollowingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40C98A01D9E2B77001F5A04 /* FollowingViewController.swift */; };
 		A40C98A51DA182D5001F5A04 /* FollowerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40C98A41DA182D5001F5A04 /* FollowerViewController.swift */; };
 		A40C98A71DA23112001F5A04 /* StaticFollowerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40C98A61DA23112001F5A04 /* StaticFollowerCell.swift */; };
-		A40C98AD1DA25208001F5A04 /* Profile.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A40C98AC1DA25208001F5A04 /* Profile.storyboard */; };
+		A40C98AD1DA25208001F5A04 /* .. in Resources */ = {isa = PBXBuildFile; fileRef = A40C98AC1DA25208001F5A04 /* .. */; };
 		A40C98AF1DA25A93001F5A04 /* UsersTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40C98AE1DA25A93001F5A04 /* UsersTableViewController.swift */; };
 		A40C98B11DA40CD4001F5A04 /* StaticProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40C98B01DA40CD4001F5A04 /* StaticProfileCell.swift */; };
 		A40C98B31DA40F34001F5A04 /* Place.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40C98B21DA40F34001F5A04 /* Place.swift */; };
@@ -73,7 +73,7 @@
 		A40C98A01D9E2B77001F5A04 /* FollowingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FollowingViewController.swift; sourceTree = "<group>"; };
 		A40C98A41DA182D5001F5A04 /* FollowerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FollowerViewController.swift; sourceTree = "<group>"; };
 		A40C98A61DA23112001F5A04 /* StaticFollowerCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StaticFollowerCell.swift; sourceTree = "<group>"; };
-		A40C98AC1DA25208001F5A04 /* Profile.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Profile.storyboard; path = ../../../../.Trash/Profile.storyboard; sourceTree = "<group>"; };
+		A40C98AC1DA25208001F5A04 /* .. */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = folder; name = ..; path = ../..; sourceTree = "<group>"; };
 		A40C98AE1DA25A93001F5A04 /* UsersTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UsersTableViewController.swift; sourceTree = "<group>"; };
 		A40C98B01DA40CD4001F5A04 /* StaticProfileCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StaticProfileCell.swift; sourceTree = "<group>"; };
 		A40C98B21DA40F34001F5A04 /* Place.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Place.swift; sourceTree = "<group>"; };
@@ -130,7 +130,6 @@
 				A40C98B01DA40CD4001F5A04 /* StaticProfileCell.swift */,
 				A4A9513A1D9A9F19009EC2DD /* User.swift */,
 				65AFED6C1DA25C690074F0C5 /* SavedPlace.swift */,
-				A4A9512C1D9A2576009EC2DD /* Profile.swift */,
 				A4A951361D9A2DB4009EC2DD /* StaticHeader.swift */,
 				A40C98A01D9E2B77001F5A04 /* FollowingViewController.swift */,
 				A4A951381D9A39BD009EC2DD /* StaticHeader.xib */,
@@ -165,7 +164,7 @@
 			children = (
 				65CDC1F71D98E8F200D046FE /* Main.storyboard */,
 				65CDC2171D99032500D046FE /* MapView.storyboard */,
-				A40C98AC1DA25208001F5A04 /* Profile.storyboard */,
+				A40C98AC1DA25208001F5A04 /* .. */,
 				65AFED681DA242920074F0C5 /* RouteMapView.storyboard */,
 				65CDC21B1D99044900D046FE /* PlaceDetail.storyboard */,
 				65CDC1FC1D98E8F200D046FE /* LaunchScreen.storyboard */,
@@ -271,7 +270,7 @@
 				65CDC2201D9A5A8A00D046FE /* MarkerInfoView.xib in Resources */,
 				65AFED691DA242920074F0C5 /* RouteMapView.storyboard in Resources */,
 				65CDC1FB1D98E8F200D046FE /* Assets.xcassets in Resources */,
-				A40C98AD1DA25208001F5A04 /* Profile.storyboard in Resources */,
+				A40C98AD1DA25208001F5A04 /* .. in Resources */,
 				65CDC2181D99032500D046FE /* MapView.storyboard in Resources */,
 				65CDC1F91D98E8F200D046FE /* Main.storyboard in Resources */,
 			);
