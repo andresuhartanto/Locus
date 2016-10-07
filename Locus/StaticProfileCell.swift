@@ -9,7 +9,19 @@
 import UIKit
 
 class StaticProfileCell: UITableViewCell {
-
+    
+    //Profile Table
     @IBOutlet weak var profileImageView: UIImageView!
+    @IBOutlet weak var cityNameLabel: UILabel!
+    
+    // List Of Places
+    @IBOutlet weak var placeImageView: UIImageView!
 
+    @IBOutlet weak var placesNameLabel: UILabel!
+    
+    // User Table
+    @IBOutlet weak var userImage: UIImageView!
+    
+    @IBOutlet weak var userLabel: UILabel!
+    
 }
