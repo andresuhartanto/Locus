@@ -23,8 +23,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
         
-        GMSServices.provideAPIKey("AIzaSyB-RSXnfsq7BWG1tdcsleWiw5ekXzR1KRQ")
-        GMSPlacesClient.provideAPIKey("AIzaSyB-RSXnfsq7BWG1tdcsleWiw5ekXzR1KRQ")
+        GMSServices.provideAPIKey("AIzaSyB7-LGkbhbQJR16q-CvK8_7eBlNNok9Shk")
+        GMSPlacesClient.provideAPIKey("AIzaSyB7-LGkbhbQJR16q-CvK8_7eBlNNok9Shk")
         
         // if this key exist in userDefault
         if let _ = NSUserDefaults.standardUserDefaults().objectForKey("userUID") as? String{

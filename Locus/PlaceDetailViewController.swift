@@ -12,6 +12,8 @@ import GooglePlaces
 import FirebaseDatabase
 import NVActivityIndicatorView
 import JSSAlertView
+import Alamofire
+import SwiftyJSON
 
 class PlaceDetailViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, NVActivityIndicatorViewable {
     
@@ -19,8 +21,9 @@ class PlaceDetailViewController: UIViewController, UICollectionViewDelegate, UIC
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var addresLabel: UILabel!
     @IBOutlet weak var BusinesshourLabel: UILabel!
-    @IBOutlet weak var phoneNumberLabel: UILabel!
-    @IBOutlet weak var websiteLabel: UILabel!
+    @IBOutlet weak var phoneNumberLabel: UIButton!
+    @IBOutlet weak var websiteLabel: UIButton!
+    @IBOutlet weak var ratingLabel: UILabel!
     @IBOutlet weak var saveButton: UIButton!
     
     var place: GMSPlace?
@@ -38,13 +41,22 @@ class PlaceDetailViewController: UIViewController, UICollectionViewDelegate, UIC
         nameLabel.text = place?.name
         addresLabel.text = place?.formattedAddress
         BusinesshourLabel.text = "Open"
-        phoneNumberLabel.text = place?.phoneNumber
+        phoneNumberLabel.setTitle(place?.phoneNumber, forState: .Normal)
+    
+        let rating = Double(place!.rating).roundToPlaces(2)
+        
+        ratingLabel.text = "\(rating)"
+        
+        
         
         let website = place?.website
         if website != nil{
-            websiteLabel.text = place?.website?.absoluteString
+            let websiteString = place?.website!.absoluteString
+            websiteLabel.setTitle(websiteString, forState: .Normal)
+            websiteLabel.userInteractionEnabled = true
         }else{
-            websiteLabel.text = "Not Available"
+            websiteLabel.setTitle("Not Available", forState: .Normal)
+            websiteLabel.userInteractionEnabled = false
         }
         
         loadFirstPhotoForPlace(place!.placeID)
@@ -65,9 +77,9 @@ class PlaceDetailViewController: UIViewController, UICollectionViewDelegate, UIC
     
     func toggleBasedOnSaveState(){
         if saved {
-            saveButton.setTitle("Unsave", forState: .Normal)
+            saveButton.setImage(UIImage(named: "Unsaved 1x"), forState: .Normal)
         } else if saved == false {
-            saveButton.setTitle("Save", forState: .Normal)
+            saveButton.setImage(UIImage(named: "Save 1x"), forState: .Normal)
         }
     }
     
@@ -95,14 +107,48 @@ class PlaceDetailViewController: UIViewController, UICollectionViewDelegate, UIC
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAtIndex section: Int) -> CGFloat {
         return 0
     }
-    
+
     @IBAction func onCallButtonPressed(sender: UIButton) {
+        
+        let alertview = JSSAlertView().show(
+            self,
+            title: "Call?",
+            text: "Are you sure you want to call this number?",
+            color: UIColorFromHex(0x00B0FF, alpha: 1),
+            iconImage: UIImage(named: "phone-receiver"),
+            buttonText: "Yes",
+            cancelButtonText: "Cancel" // This tells JSSAlertView to create a two-button alert
+        )
+        alertview.setTextTheme(.Light)
+        alertview.addAction(callFunction)
     }
-    @IBAction func onShareButtonPressed(sender: UIButton) {
+    
+    func callFunction(){
+        if let CleanphoneNumber = self.place?.phoneNumber!.stringByReplacingOccurrencesOfString(" ", withString: ""){
+            if let phoneCallURL:NSURL = NSURL(string: "tel://\(CleanphoneNumber)") {
+                let application:UIApplication = UIApplication.sharedApplication()
+                if (application.canOpenURL(phoneCallURL)) {
+                    application.openURL(phoneCallURL);
+                }
+            }
+        }else{
+            print("No phone number")
+        }
     }
+    
+    
+    @IBAction func onWebsiteButtonPressed(sender: UIButton) {
+    }
+
     @IBAction func onNavigateButtonPressed(sender: UIButton) {
         performSegueWithIdentifier("RouteSegue", sender: nil)
     }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        let destination = segue.destinationViewController as! RouteMapViewController
+        destination.place = self.place
+    }
+    
     @IBAction func onSaveButtonPressed(sender: UIButton) {
         
         if saved {
@@ -131,16 +177,22 @@ class PlaceDetailViewController: UIViewController, UICollectionViewDelegate, UIC
             
             guard let aGMSAddress = response!.firstResult() else { return }
             
+            self.categoryPhotoRef(aGMSAddress.locality!)
+            
             let placeDict = ["placeID": self.place!.placeID,
                              "name": self.place!.name,
                              "locality": aGMSAddress.locality!,
                              "longitude": self.place!.coordinate.longitude,
                              "latitude": self.place!.coordinate.latitude,
-                             "userUID": User.currentUserUid()!]
-            let placeRef = DataService.rootRef.child("Place").childByAutoId()
+                             "userUID": User.currentUserUid()!,
+                             "created_at": NSDate().timeIntervalSince1970]
+            let placeRef = DataService.rootRef.child("Place").child("\(aGMSAddress.locality!)").childByAutoId()
             placeRef.updateChildValues(placeDict as [NSObject : AnyObject])
             
             DataService.usersRef.child(User.currentUserUid()!).child("savedPlace").updateChildValues([placeRef.key: true])
+            
+            DataService.rootRef.child("usersLocalities").child(User.currentUserUid()!).updateChildValues([aGMSAddress.locality!: true])
+            
             self.newSavedPlace = placeRef.key
             self.saved = true
             self.toggleBasedOnSaveState()
@@ -152,17 +204,48 @@ class PlaceDetailViewController: UIViewController, UICollectionViewDelegate, UIC
     }
     
     func removeFunction(){
-        if let placeKey = self.aSavedPlace?.placeKey {
-            DataService.rootRef.child("Place").child(placeKey).removeValue()
-            DataService.usersRef.child(User.currentUserUid()!).child("savedPlace").child(placeKey).removeValue()
-            self.aSavedPlace?.placeKey = nil
-            self.saved = false
-            self.toggleBasedOnSaveState()
-        } else if let placeKey = self.newSavedPlace {
-            DataService.rootRef.child("Place").child(placeKey).removeValue()
-            DataService.usersRef.child(User.currentUserUid()!).child("savedPlace").child(placeKey).removeValue()
-            self.saved = false
-            self.toggleBasedOnSaveState()
+        
+        aGMSGeocoder.reverseGeocodeCoordinate(place!.coordinate) { (response, error) in
+            
+            guard let aGMSAddress = response!.firstResult() else { return }
+            
+            if let placeKey = self.aSavedPlace?.placeKey {
+                DataService.rootRef.child("Place").child("\(aGMSAddress.locality!)").child(placeKey).removeValue()
+                DataService.usersRef.child(User.currentUserUid()!).child("savedPlace").child(placeKey).removeValue()
+                self.aSavedPlace?.placeKey = nil
+                self.saved = false
+                self.toggleBasedOnSaveState()
+            } else if let placeKey = self.newSavedPlace {
+                DataService.rootRef.child("Place").child("\(aGMSAddress.locality!)").child(placeKey).removeValue()
+                DataService.usersRef.child(User.currentUserUid()!).child("savedPlace").child(placeKey).removeValue()
+                self.saved = false
+                self.toggleBasedOnSaveState()
+            }
+        }
+    }
+    
+    func categoryPhotoRef(locality: String){
+        
+        let trimmedLocalityString = locality.stringByReplacingOccurrencesOfString(" ", withString: "")
+        
+        Alamofire
+            .request(.GET, "https://maps.googleapis.com/maps/api/place/textsearch/json?query=\(trimmedLocalityString)&key=AIzaSyB7-LGkbhbQJR16q-CvK8_7eBlNNok9Shk")
+            .responseJSON { (JSONresponse) in
+                switch JSONresponse.result{
+                case .Success(let responseValue):
+                    let json = JSON(responseValue)
+                    
+                    if let photoReference = json["results"][0]["photos"][0]["photo_reference"].string{
+                        
+                        let photoRefDict = ["photoRef": photoReference]
+                        
+                        DataService.placesRef.child(locality).child("photoRef").updateChildValues(photoRefDict as [NSObject : AnyObject])
+                    }
+                    
+                case .Failure(let error):
+                    print(error.localizedDescription)
+                    
+                }
         }
     }
     
@@ -223,5 +306,13 @@ extension UIImage{
         UIGraphicsEndImageContext()
         
         return image;
+    }
+}
+
+extension Double {
+    /// Rounds the double to decimal places value
+    func roundToPlaces(places:Int) -> Double {
+        let divisor = pow(10.0, Double(places))
+        return round(self * divisor) / divisor
     }
 }

@@ -9,7 +9,7 @@
 import UIKit
 import GoogleMaps
 import GooglePlaces
-
+import Alamofire
 class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManagerDelegate {
     
     @IBOutlet weak var mapView: GMSMapView!
@@ -37,7 +37,6 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         
         placesClient = GMSPlacesClient.sharedClient()
         
-        
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -56,7 +55,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         getSavedPlace()
     }
     
-   
+    
     func searchView(){
         
         resultsViewController = GMSAutocompleteResultsViewController()
@@ -134,14 +133,16 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     
     func getSavedPlace(){
         DataService.usersRef.child(User.currentUserUid()!).child("savedPlace").observeEventType(.ChildAdded , withBlock: { (snapshot) in
-            DataService.rootRef.child("Place").child(snapshot.key).observeSingleEventOfType(.Value , withBlock: {(snap) in
-                if let savedPlace = SavedPlace.init(snapshot: snap){
-                    self.savedPlace.append(savedPlace)
-                }
-                
-                for place in self.savedPlace{
-                    self.populateMapview(place)
-                }
+            DataService.rootRef.child("Place").observeEventType(.ChildAdded , withBlock: {(localitySnap) in
+                DataService.rootRef.child("Place").child(localitySnap.key).child(snapshot.key).observeSingleEventOfType(.Value , withBlock: {(snap) in
+                    if let savedPlace = SavedPlace.init(snapshot: snap){
+                        self.savedPlace.append(savedPlace)
+                    }
+                    
+                    for place in self.savedPlace{
+                        self.populateMapview(place)
+                    }
+                })
             })
         })
     }
@@ -151,7 +152,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         let longitude = savedPlace.longitude
         let coordinate = CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!)
         let marker = GMSMarker(position: coordinate)
-//        let circularImage = UIImageView()
+        //        let circularImage = UIImageView()
         marker.appearAnimation = kGMSMarkerAnimationPop
         marker.icon = UIImage(named: "placeholder-4")
         marker.snippet = savedPlace.placeID
