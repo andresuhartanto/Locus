@@ -16,6 +16,8 @@ target 'Locus' do
   pod 'SDWebImage'
   pod 'NVActivityIndicatorView', :git => 'https://github.com/ninjaprox/NVActivityIndicatorView.git', :branch => 'swift2.3'
   pod 'JSSAlertView'
+  pod 'Alamofire', '3.5.0'
+  pod 'SwiftyJSON', '~> 2.3'
 
 
 end
