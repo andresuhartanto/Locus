@@ -17,6 +17,8 @@ class Place: NSObject{
     var placeID: String?
     var uid: String?
     var userUID: String?
+    var photoRef: String?
+    var username: String?
     
     init?(snapshot: FIRDataSnapshot){
         
@@ -54,6 +56,12 @@ class Place: NSObject{
         }else{
             self.userUID = ""
         }
+        if let dictPhotoRef = dict["photoRef"] as? String{
+            self.photoRef = dictPhotoRef
+        }else{
+            self.photoRef = ""
+        }
+        
     
     }
     

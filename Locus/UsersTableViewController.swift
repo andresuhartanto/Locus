@@ -16,12 +16,14 @@ class UsersTableViewController: UITableViewController, StaticUserHeaderDelegate,
     let header = NSBundle.mainBundle().loadNibNamed("StaticHeader", owner: 0, options: nil)[0] as? StaticHeader
     var userProfile: String!
     var select:Bool = true
+    var userListOfLocation = [Location]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         navigation()
         retrieveData()
+        retrievePlaceData()
         self.header?.profileImage.userInteractionEnabled = false
         self.header?.backgroundImage.userInteractionEnabled = false 
     }
@@ -37,6 +39,58 @@ class UsersTableViewController: UITableViewController, StaticUserHeaderDelegate,
         self.header?.profileImage.layer.borderWidth = 2.0
         self.header?.profileImage.layer.borderColor = UIColor.whiteColor().CGColor
         
+    }
+    
+    func retrievePlaceData(){
+        
+        //        DataService.usersRef.child(currentUserID).child("following").observeSingleEventOfType(.Value, withBlock: { snapshot in
+        //            if snapshot.hasChildren(){
+        //                let keyArray = snapshot.value?.allKeys as! [String]
+        //                for key in keyArray{
+        
+        guard let currentUserUID = self.userProfile else{return}
+        
+        DataService.usersRef.child(currentUserUID).child("savedPlace").observeSingleEventOfType(.Value, withBlock: {userSnapshot in
+            
+            if userSnapshot.hasChildren(){
+                let keyArray = userSnapshot.value?.allKeys as! [String]
+                for key in keyArray{
+                    DataService.placesRef.observeEventType(.ChildAdded, withBlock: { placeSnapshot in
+                        DataService.placesRef.child(placeSnapshot.key).child(key).observeSingleEventOfType(.Value, withBlock: {(snapshot) in
+                            if let place = Place(snapshot:snapshot){
+                                let location = Location.init()
+                                location.cityName = place.locality
+                                DataService.placesRef.child(placeSnapshot.key).child("photoRef").observeSingleEventOfType(.Value, withBlock: {snapshot in
+                                    if let place1 = Place(snapshot: snapshot){
+                                        location.photoRef = place1.photoRef
+                                        self.loadImage(location)
+                                        self.tableView.reloadData()
+                                    }
+                                })
+                            }
+                        })
+                    })
+                }
+            }
+        })
+        
+    }
+    func loadImage(location: Location){
+        
+        guard let photoRef = location.photoRef else { return }
+        
+        let url = NSURL(string:"https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=\(photoRef)&key=AIzaSyB7-LGkbhbQJR16q-CvK8_7eBlNNok9Shk")
+        print(url)
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+            let data = NSData(contentsOfURL: url!)
+            dispatch_async(dispatch_get_main_queue(), {
+                if data != nil{
+                    location.image = UIImage(data: data!)
+                    self.userListOfLocation.append(location)
+                    self.tableView.reloadData()
+                }
+            })
+        }
     }
     
     func retrieveData(){
@@ -137,13 +191,20 @@ class UsersTableViewController: UITableViewController, StaticUserHeaderDelegate,
     
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        return userListOfLocation.count
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("UserCell")
-        cell?.textLabel?.text = "abc"
-        return cell!
+        let cell:StaticProfileCell = tableView.dequeueReusableCellWithIdentifier("UserCell") as!StaticProfileCell
+        let place = userListOfLocation[indexPath.row]
+        
+        cell.userImage.image = place.image
+        cell.userImage.layer.shadowOpacity = 0.7
+        cell.userImage.layer.shadowRadius = 10.0
+        cell.userLabel.text = place.cityName
+        cell.userLabel.textColor = UIColor.whiteColor()
+        
+        return cell
     }
 
 }
