@@ -11,17 +11,21 @@ import FirebaseDatabase
 import SDWebImage
 
 
-class FollowingViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class FollowingViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
     
+    @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var tableView: UITableView!
     var listOfFollowing = [User]()
     var userProfile:String!
+//    var filtered:String = []
+    var searchActive: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         tableView.delegate = self
         tableView.dataSource = self
+        searchBar.delegate = self
         
         guard let currentUserID = self.userProfile else{
             return
@@ -106,8 +110,54 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
             nextScene.userProfile = self.userProfile
         }
     }
+    
+    func searchBarTextDidEndEditing(searchBar: UISearchBar) {
+        searchActive = true
+    }
+    
+    func searchBarTextDidBeginEditing(searchBar: UISearchBar) {
+        searchActive = false
+    }
+    
+    func searchBarCancelButtonClicked(searchBar: UISearchBar) {
+        searchActive = false
+    }
+    
+    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
+        searchActive = false
+    }
+//    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
+//        
+//        if self.listOfFollowing.isEmpty {
+//            
+//            // set searching false
+//            self.searchActive = false
+//            
+//            // reload table view
+//            self.tableView.reloadData()
+//            
+//        }else{
+//            
+//            // set searghing true
+//            self.searchActive = true
+//            
+//            // empty searching array
+//            self.filtered.removeAll(keepCapacity: false)
+//            
+//            // find matching item and add it to the searcing array
+//            for i in 0..<self.listOfFollowing.count {
+//                
+//                let listItem = self.listOfFollowing[i]
+//                    self.filtered.append(listItem)
+//                }
+//            }
+//            
+//            self.tableView.reloadData()
+//        }
 
 }
+
+
 
 
 

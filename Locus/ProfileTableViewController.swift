@@ -25,10 +25,13 @@ class ProfileTableViewController: UITableViewController, StaticHeaderDelegate, F
     var listOfUser = [Place]()
     var cameraShown:Bool = false
     var fusumaSetting: ImageSelected?
-    var userProfile: String!
+    var locality: String!
     var select:Bool = true
-    var listOfImage = [UIImage]()
+    var listOfLocation = [Location]()
     var image: UIImage!
+    var myPlace = [Place]()
+    var myPlaceType = [PlaceType]()
+    var myCity = [String]()
 
     
     
@@ -40,7 +43,10 @@ class ProfileTableViewController: UITableViewController, StaticHeaderDelegate, F
 
         navigation()
         retrieveHeaderData()
-        retrievePlaceData()
+        retrieveCity()
+        
+//        checkIsMyPost()
+        
         self.header?.followButtonPressed.hidden = true
         
     }
@@ -57,19 +63,109 @@ class ProfileTableViewController: UITableViewController, StaticHeaderDelegate, F
         self.header?.profileImage.layer.borderColor = UIColor.whiteColor().CGColor
     }
     
+    func retrieveCity(){
+        DataService.rootRef.child("usersLocalities").child(User.currentUserUid()!).observeEventType(.Value, withBlock: {snapshot in
+            
+            self.myCity = snapshot.value?.allKeys as! [String]
+            self.createPlaceType()
+            self.retrievePlaceData()
+            
+        })
+    }
+    
+    func createPlaceType(){
+        
+        for i in self.myCity{
+            let placeType = PlaceType.init()
+            placeType.cityName = i
+            self.myPlaceType.append(placeType)
+        }
+        
+    }
+    
+    func removeOthersPost(){
+        
+        for (index,i) in self.myPlace.enumerate(){
+            if i.userUID != User.currentUserUid(){
+                self.myPlace.removeAtIndex(index)
+            }
+        }
+        self.filterCity()
+    }
+    
+    func filterCity(){
+        
+        for i in self.myPlace{
+            for x in self.myPlaceType{
+                if i.locality == x.cityName{
+                    x.location.append(i)
+                }
+            }
+        }
+        
+
+    }
+    
+
     func retrievePlaceData(){
-        DataService.placesRef.observeEventType(.ChildAdded, withBlock: { placeSnapshot in
-            if let place = Place(snapshot:placeSnapshot){
-                DataService.usersRef.child(place.userUID!).observeSingleEventOfType(.Value, withBlock: {userSnapshot in
-                    if let user = User(snapshot:userSnapshot){
-                        place.userUID = user.userUID
-                        self.listOfUser.append(place)
-                        self.loadFirstPhotoForPlace(place.placeID!)
-                        self.tableView.reloadData()
+
+//    guard let currentUserUID = User.currentUserUid() else{return}
+//    
+//    DataService.usersRef.child(currentUserUID).child("savedPlace").observeSingleEventOfType(.Value, withBlock: {userSnapshot in
+//        
+//        if userSnapshot.hasChildren(){
+//            let keyArray = userSnapshot.value?.allKeys as! [String]
+//                for key in keyArray{
+//                    DataService.rootRef.child("userslocalities").child(key).observeSingleEventOfType(.Value, withBlock: {(snapshot) in
+//                        if let place = Place(snapshot:snapshot){
+//                            let location = Location.init()
+//                            location.cityName = place.locality
+//                                DataService.placesRef.observeEventType(.ChildAdded, withBlock: { placeSnapshot in
+//                                    DataService.placesRef.child(placeSnapshot.key).child("photoRef").observeSingleEventOfType(.Value, withBlock: {snapshot in
+//                                        if let place1 = Place(snapshot: snapshot){
+//                                            location.photoRef = place1.photoRef
+//                                            self.loadImage(location)
+//                                            self.tableView.reloadData()
+//                                        }
+//                                    })
+//                            })
+//                        }
+//                    })
+//            }
+//        }
+//        })
+        
+        DataService.placesRef.observeEventType(.Value, withBlock: {placeSnapshot in
+            let keyArray = placeSnapshot.value?.allKeys as! [String]
+            for key in keyArray{
+                DataService.placesRef.child(key).observeEventType(.Value, withBlock: {placeSnapshot2 in
+                    if let place = Place(snapshot:placeSnapshot2){
+                        
+                        self.myPlace.append(place)
+                        
+                        self.removeOthersPost()
                     }
                 })
             }
         })
+
+    }
+    func loadImage(location: Location){
+        
+        guard let photoRef = location.photoRef else { return }
+        
+        let url = NSURL(string:"https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=\(photoRef)&key=AIzaSyB7-LGkbhbQJR16q-CvK8_7eBlNNok9Shk")
+        print(url)
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+            let data = NSData(contentsOfURL: url!)
+            dispatch_async(dispatch_get_main_queue(), {
+                if data != nil{
+                location.image = UIImage(data: data!)
+                self.listOfLocation.append(location)
+                    self.tableView.reloadData()
+                }
+            })
+        }
     }
     
     func retrieveHeaderData(){
@@ -115,9 +211,9 @@ class ProfileTableViewController: UITableViewController, StaticHeaderDelegate, F
         if segue.identifier == "FollowingSegue"{
             let nextScene = segue.destinationViewController as! FollowingViewController
             nextScene.userProfile = User.currentUserUid()
-        }else if segue.identifier == "LocationSegue"{
-            let nextScene = segue.destinationViewController as! LocationViewController
-            nextScene.image = self.image
+//        }else if segue.identifier == "LocationSegue"{
+//            let nextScene = segue.destinationViewController as! LocationViewController
+//            nextScene.image = self.image
         }else if segue.identifier == "FollowerSegue"{
             let nextScene = segue.destinationViewController as! FollowerViewController
             nextScene.userProfile = User.currentUserUid()
@@ -133,7 +229,7 @@ class ProfileTableViewController: UITableViewController, StaticHeaderDelegate, F
         }
         let fusuma = FusumaViewController()
         fusuma.delegate = self
-        fusuma.hasVideo = false // If you want to let the users allow to use video.
+        fusuma.hasVideo = false
         self.presentViewController(fusuma, animated: true, completion:nil)
         self.cameraShown = true
     }
@@ -215,71 +311,137 @@ class ProfileTableViewController: UITableViewController, StaticHeaderDelegate, F
         
     }
     
-    func loadFirstPhotoForPlace(placeID: String) {
-        
-        GMSPlacesClient.sharedClient().lookUpPhotosForPlaceID(placeID) { (photos, error) -> Void in
-            if let error = error {
-                // TODO: handle the error.
-                print("Error: \(error.description)")
-            } else {
-                if let photos = photos?.results {
-                    self.loadImageForMetadata(photos)
-                }
-            }
-        }
-    }
-    
-    func loadImageForMetadata(photoMetadata: [GMSPlacePhotoMetadata]) {
-        
-        for (index, photo) in photoMetadata.enumerate() where index < 1{
-            GMSPlacesClient.sharedClient().loadPlacePhoto(photo, callback: { (photo, error) in
-                if let error = error {
-                    // TODO: handle the error.
-                    print("Error: \(error.description)")
-                } else {
-                    self.listOfImage.append(photo!)
-                    self.tableView.reloadData()
-                }
-            })
-        }
-    }
-    
     override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        
-        header?.delegate = self
-        header?.userDelegate = self
-        return header
+            header?.delegate = self
+            header?.userDelegate = self
+            return header
+
     }
-    
+
     override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         
         return header?.frame.height ?? 50
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return listOfImage.count
+        return myPlaceType.count
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell:StaticProfileCell = tableView.dequeueReusableCellWithIdentifier("ProfileCell") as! StaticProfileCell
-        let image = listOfImage[indexPath.row]
+        let cell = tableView.dequeueReusableCellWithIdentifier("ProfileCell") as! StaticProfileCell
         
-        cell.profileImageView.image = image
-        cell.profileImageView.layer.shadowOpacity = 0.7
-        cell.profileImageView.layer.shadowRadius = 10.0
+        let placeType = self.myPlaceType[indexPath.row]
         
+//        cell.profileImageView.image = placeType.image
+//        cell.profileImageView.layer.shadowOpacity = 0.7
+//        cell.profileImageView.layer.shadowRadius = 10.0
+        cell.cityNameLabel.text = placeType.cityName
+        cell.cityNameLabel.textColor = UIColor.whiteColor()
+
         
         return cell
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let place = listOfUser[indexPath.row]
-        self.userProfile = place.placeID
-        let image = listOfImage[indexPath.row]
-        self.image = image
-        self.performSegueWithIdentifier("LocationSegue", sender: self)
+        let place = listOfLocation[indexPath.row]
+        
+        self.locality = place.photoRef
+
+        self.performSegueWithIdentifier("PlaceSegue", sender: self)
     }
     
     
 
 }
+
+
+
+
+
+
+
+//    func checkIsMyPost(){
+//        DataService.placesRef.observeEventType(.Value, withBlock: {userSnapshot in
+//            let keyArray = userSnapshot.value?.allKeys as! [String]
+//            for key in keyArray{
+//                DataService.placesRef.child(key).observeEventType(.Value, withBlock: { userSnapshot2 in
+//                    let keyArray2 = userSnapshot2.value?.allKeys as! [String]
+//                    for key2 in keyArray2{
+//                        let placeType = PlaceType.init()
+//                        DataService.placesRef.child(key).child(key2).observeEventType(.Value, withBlock: {userSnapshot3 in
+//
+//                            if let userName = userSnapshot3.value!["userUID"] as? String{
+//                                if userName == User.currentUserUid(){
+//                                    self.myPlace.append(userSnapshot3.key)
+//
+//                                }
+//                            }
+//
+//                            for i in self.myPlace{
+//                                self.retrievePlaceData(i,placeType: placeType)
+//                            }
+//
+//
+//                        })
+//
+//                        self.loadPlaceImage(placeType, key: key)
+//                    }
+//
+//                })
+//            }
+//        })
+//    }
+
+//    func loadPlaceImage(placeType: PlaceType, key: String){
+//
+//        DataService.placesRef.child(key).child("photoRef").observeSingleEventOfType(.Value, withBlock: {snapshot3 in
+//            if let user = Place(snapshot: snapshot3){
+//                placeType.photoRef = user.photoRef
+//                self.loadImage(placeType)
+//                self.tableView.reloadData()
+//            }
+//        })
+//
+//    }
+
+
+// Retrivedata
+//        DataService.placesRef.observeEventType(.ChildAdded, withBlock: { placeSnapshot in
+//
+//            DataService.placesRef.child(placeSnapshot.key).observeEventType(.Value, withBlock: {(snapshot) in
+//                let location = Location.init()
+//                if snapshot.hasChild(path){
+//                    DataService.placesRef.child(placeSnapshot.key).child(path).observeSingleEventOfType(.Value, withBlock: {(snapshot2) in
+//                        if let place = Place(snapshot:snapshot2){
+//                            placeType.cityName = place.locality
+//                            location.cityName = place.locality
+//                            placeType.location.append(location)
+//
+//
+//                        }
+//                    })
+//
+//                }
+//            })
+//        })
+
+
+//            DataService.placesRef.observeEventType(.ChildAdded, withBlock: { placeSnapshot in
+//                DataService.placesRef.child(placeSnapshot.key).child(path).observeSingleEventOfType(.Value, withBlock: {(snapshot) in
+//                if let place = Place(snapshot:snapshot){
+//                    let location = Location.init()
+//                    location.cityName = place.locality
+//                    DataService.placesRef.child(placeSnapshot.key).child("photoRef").observeSingleEventOfType(.Value, withBlock: {snapshot2 in
+//                        if let user = Place(snapshot: snapshot2){
+//                            location.photoRef = user.photoRef
+//                            self.loadImage(location)
+//                            self.tableView.reloadData()
+//                        }
+//
+//
+//                    })
+//                }
+//
+//            })
+//
+//        })
