@@ -75,6 +75,14 @@ class PlaceDetailViewController: UIViewController, UICollectionViewDelegate, UIC
         
     }
     
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        let image = getNavigationBarImageWith(0)
+        self.navigationController?.navigationBar.setBackgroundImage(image, forBarMetrics: .Default)
+        self.navigationController?.navigationBar.shadowImage = image
+    }
+    
     func toggleBasedOnSaveState(){
         if saved {
             saveButton.setImage(UIImage(named: "Unsaved 1x"), forState: .Normal)
@@ -145,6 +153,7 @@ class PlaceDetailViewController: UIViewController, UICollectionViewDelegate, UIC
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .Plain, target: nil, action: nil)
         let destination = segue.destinationViewController as! RouteMapViewController
         destination.place = self.place
     }
@@ -186,6 +195,8 @@ class PlaceDetailViewController: UIViewController, UICollectionViewDelegate, UIC
                              "latitude": self.place!.coordinate.latitude,
                              "userUID": User.currentUserUid()!,
                              "created_at": NSDate().timeIntervalSince1970]
+            
+            // add .child(User.currentUserUid()!)
             let placeRef = DataService.rootRef.child("Place").child("\(aGMSAddress.locality!)").childByAutoId()
             placeRef.updateChildValues(placeDict as [NSObject : AnyObject])
             
@@ -307,6 +318,28 @@ extension UIImage{
         
         return image;
     }
+    
+//    static func circleImage() -> UIImage{
+//        let rect = CGRectMake(0, 0, 20, 20)
+//        UIGraphicsBeginImageContextWithOptions(rect.size, false, 0.0)
+//        let ctx = UIGraphicsGetCurrentContext()
+//        
+//        CGContextSaveGState(ctx)
+//        
+//        
+//        let red: CGFloat = CGFloat(arc4random_uniform(255)) / 255.0
+//        let blue: CGFloat = CGFloat(arc4random_uniform(255)) / 255.0
+//        let green: CGFloat = CGFloat(arc4random_uniform(255)) / 255.0
+//        
+//        let color = UIColor(red: red, green: green, blue: blue, alpha: 1.0)
+//        CGContextSetFillColorWithColor(ctx, color.CGColor);
+//        CGContextFillEllipseInRect(ctx, rect);
+//        
+//        CGContextRestoreGState(ctx);
+//        let circle = UIGraphicsGetImageFromCurrentImageContext();
+//        UIGraphicsEndImageContext();
+//        return circle
+//    }
 }
 
 extension Double {

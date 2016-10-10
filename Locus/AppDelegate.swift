@@ -44,8 +44,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func autocompleteStyling(){
-        // Define some colors.
-        let scooter = UIColor.init(red: 37/255, green: 183/255, blue: 211/255, alpha: 1)
+        // Define some colors. UIColor.init(red: 37/255, green: 183/255, blue: 211/255, alpha: 1)
+        let scooter = UIColor.init(red: 0/255, green: 176/255, blue: 255/255, alpha: 1)
         let lightGray = UIColor.lightGrayColor()
         // Navigation bar background.
         UINavigationBar.appearance().barTintColor = scooter
