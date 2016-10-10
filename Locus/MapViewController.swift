@@ -10,6 +10,8 @@ import UIKit
 import GoogleMaps
 import GooglePlaces
 import Alamofire
+import KCFloatingActionButton
+
 class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManagerDelegate {
     
     @IBOutlet weak var mapView: GMSMapView!
@@ -26,6 +28,9 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     var place: GMSPlace?
     
     var savedPlace = [SavedPlace]()
+    var followingSavedPlace = [FollowingSavedPlace]()
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,6 +41,8 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         
         
         placesClient = GMSPlacesClient.sharedClient()
+        
+        floatingButton()
         
     }
     
@@ -53,6 +60,27 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         self.savedPlace.removeAll()
         mapView.clear()
         getSavedPlace()
+        getFollowingPlace()
+    }
+    
+    func floatingButton(){
+        let floatingButton = KCFloatingActionButton()
+        
+        floatingButton.buttonColor = UIColor.init(red: 255/255, green: 23/255, blue: 68/255, alpha: 1)
+        floatingButton.addItem("Profile", icon: UIImage(named: "user-7")!) {item in
+            self.performSegueWithIdentifier("ProfileSegue", sender: nil)
+            floatingButton.close()}
+        
+        floatingButton.addItem("Position", icon: UIImage(named: "gps-location-symbol")) {item in
+            
+            let location = self.locationManager.location
+            let camera = GMSCameraPosition(target: location!.coordinate, zoom: 16, bearing: 0, viewingAngle: 0.0)
+            self.mapView.animateToCameraPosition(camera)
+            self.mapView.myLocationEnabled = true
+            
+            floatingButton.close()}
+        
+        self.view.addSubview(floatingButton)
     }
     
     
@@ -81,8 +109,6 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         infoMarker.infoWindowAnchor.y = 1
         infoMarker.map = mapView
         
-        let camera = GMSCameraPosition(target: location, zoom: 16, bearing: 0, viewingAngle: 0.0)
-        mapView.animateToCameraPosition(camera)
         mapView.selectedMarker = infoMarker
     }
     
@@ -113,10 +139,10 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             self.place = place
             self.performSegueWithIdentifier("DetailSegue", sender: nil)
         })
-        
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .Plain, target: nil, action: nil)
         if segue.identifier == "DetailSegue"{
             let destination = segue.destinationViewController as! PlaceDetailViewController
             destination.place = self.place
@@ -135,13 +161,36 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         DataService.usersRef.child(User.currentUserUid()!).child("savedPlace").observeEventType(.ChildAdded , withBlock: { (snapshot) in
             DataService.rootRef.child("Place").observeEventType(.ChildAdded , withBlock: {(localitySnap) in
                 DataService.rootRef.child("Place").child(localitySnap.key).child(snapshot.key).observeSingleEventOfType(.Value , withBlock: {(snap) in
+                    
+                    
                     if let savedPlace = SavedPlace.init(snapshot: snap){
                         self.savedPlace.append(savedPlace)
                     }
                     
+                    
+                    
                     for place in self.savedPlace{
                         self.populateMapview(place)
                     }
+                })
+            })
+        })
+        //        self.getFollowingPlace()
+    }
+    
+    func getFollowingPlace(){
+        DataService.usersRef.child(User.currentUserUid()!).child("following").observeEventType(.ChildAdded , withBlock: { (snapshot) in
+            DataService.rootRef.child("users").child(snapshot.key).child("savedPlace").observeEventType(.ChildAdded , withBlock: { (snapshot2) in
+                DataService.rootRef.child("Place").observeEventType(.ChildAdded , withBlock: {(localitySnap) in
+                    DataService.rootRef.child("Place").child(localitySnap.key).child(snapshot2.key).observeSingleEventOfType(.Value , withBlock: {(snapshot3) in
+                        if let savedPlace = FollowingSavedPlace.init(snapshot: snapshot3){
+                            self.followingSavedPlace.append(savedPlace)
+                        }
+                        
+                        for place in self.followingSavedPlace{
+                            self.populateMapviewFromFollowing(place)
+                        }
+                    })
                 })
             })
         })
@@ -155,6 +204,21 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         //        let circularImage = UIImageView()
         marker.appearAnimation = kGMSMarkerAnimationPop
         marker.icon = UIImage(named: "placeholder-4")
+        marker.snippet = savedPlace.placeID
+        marker.title = savedPlace.name
+        
+        marker.map = mapView
+    }
+    
+    func populateMapviewFromFollowing(savedPlace: FollowingSavedPlace){
+        let latitude = savedPlace.latitude
+        let longitude = savedPlace.longitude
+        let coordinate = CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!)
+        let marker = GMSMarker(position: coordinate)
+        //        let circularImage = UIImageView()
+        marker.appearAnimation = kGMSMarkerAnimationPop
+        
+        marker.icon = UIImage(named: "blue")
         marker.snippet = savedPlace.placeID
         marker.title = savedPlace.name
         

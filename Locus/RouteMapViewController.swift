@@ -25,6 +25,17 @@ class RouteMapViewController: UIViewController, GMSMapViewDelegate, CLLocationMa
         locationManager.delegate = self
         locationManager.startUpdatingLocation()
         mapView.delegate = self
+        
+        self.navigationItem.title = "Route"
+        
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        let image = getNavigationBarImageWith(1)
+        self.navigationController?.navigationBar.setBackgroundImage(image, forBarMetrics: .Default)
+        self.navigationController?.navigationBar.shadowImage = image
     }
     
     func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {

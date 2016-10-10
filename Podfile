@@ -18,6 +18,7 @@ target 'Locus' do
   pod 'JSSAlertView'
   pod 'Alamofire', '3.5.0'
   pod 'SwiftyJSON', '~> 2.3'
+  pod "KCFloatingActionButton", "~> 1.4.3"
 
 
 
