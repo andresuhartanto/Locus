@@ -14,6 +14,7 @@ import NVActivityIndicatorView
 import JSSAlertView
 import Alamofire
 import SwiftyJSON
+import SDWebImage
 
 class PlaceDetailViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, NVActivityIndicatorViewable {
     
@@ -25,6 +26,7 @@ class PlaceDetailViewController: UIViewController, UICollectionViewDelegate, UIC
     @IBOutlet weak var websiteLabel: UIButton!
     @IBOutlet weak var ratingLabel: UILabel!
     @IBOutlet weak var saveButton: UIButton!
+    @IBOutlet weak var savedByCollectionView: UICollectionView!
     
     var place: GMSPlace?
     var images = [UIImage]()
@@ -33,6 +35,14 @@ class PlaceDetailViewController: UIViewController, UICollectionViewDelegate, UIC
     let aGMSGeocoder = GMSGeocoder()
     var aSavedPlace: SavedPlace?
     
+    var followingUser = [User]()
+    lazy var emptyLabel: UILabel = {
+        let label = UILabel(frame: CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height))
+        label.text = "Not save by your friend"
+        label.textAlignment = NSTextAlignment.Center
+        
+        return label
+    }()
     var newSavedPlace: String?
     
     override func viewDidLoad() {
@@ -42,7 +52,7 @@ class PlaceDetailViewController: UIViewController, UICollectionViewDelegate, UIC
         addresLabel.text = place?.formattedAddress
         BusinesshourLabel.text = "Open"
         phoneNumberLabel.setTitle(place?.phoneNumber, forState: .Normal)
-    
+        
         let rating = Double(place!.rating).roundToPlaces(2)
         
         ratingLabel.text = "\(rating)"
@@ -60,6 +70,10 @@ class PlaceDetailViewController: UIViewController, UICollectionViewDelegate, UIC
         }
         
         loadFirstPhotoForPlace(place!.placeID)
+        
+        getSavedBy()
+        
+        self.savedByCollectionView.alwaysBounceVertical = true
         
         defaultNavigationBar = self.navigationController?.navigationBar
         
@@ -92,20 +106,55 @@ class PlaceDetailViewController: UIViewController, UICollectionViewDelegate, UIC
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return images.count
+        if collectionView == self.collectionView{
+            return images.count
+        }else{
+            if self.followingUser.count == 0{
+                self.savedByCollectionView.backgroundView = emptyLabel
+                return 0
+                
+            } else {
+                self.savedByCollectionView.backgroundView = nil
+                return followingUser.count
+            }
+            
+        }
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("Cell", forIndexPath: indexPath) as! ImageCollectionViewCell
-        cell.imageView.image = images[indexPath.row]
         
-        return cell
+        if collectionView == self.collectionView{
+            let cell = collectionView.dequeueReusableCellWithReuseIdentifier("Cell", forIndexPath: indexPath) as! ImageCollectionViewCell
+            cell.imageView.image = images[indexPath.row]
+            
+            return cell
+        }else{
+            let cell = collectionView.dequeueReusableCellWithReuseIdentifier("userCell", forIndexPath: indexPath) as! SavedByCollectionViewCell
+            let user = followingUser[indexPath.row]
+            
+            if let imageURL = user.profileImage{
+                let url = NSURL(string: imageURL)
+                cell.userProfileImage.sd_setImageWithURL(url, completed: { (image, error, cache, url) in
+                    print("cellForItemAtIndexPath")
+                    cell.layer.cornerRadius = cell.frame.size.width / 2
+                })
+            }
+            
+            return cell
+        }
     }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        let width = self.view.frame.size.width
-        let height = collectionView.frame.size.height
-        return CGSizeMake(width, height)
+        if collectionView == self.collectionView{
+            let width = self.view.frame.size.width
+            let height = collectionView.frame.size.height
+            return CGSizeMake(width, height)
+        }else{
+            print("sizeForItemAtIndexPath")
+            let height = collectionView.frame.size.height
+            return CGSizeMake(height, height)
+            
+        }
     }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAtIndex section: Int) -> CGFloat {
@@ -115,7 +164,15 @@ class PlaceDetailViewController: UIViewController, UICollectionViewDelegate, UIC
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAtIndex section: Int) -> CGFloat {
         return 0
     }
-
+    
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        if collectionView == self.savedByCollectionView{
+            let storyboard = UIStoryboard(name: "Profile", bundle: nil)
+            let vc = storyboard.instantiateViewControllerWithIdentifier("FollowingProfileVC")
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
+    }
+    
     @IBAction func onCallButtonPressed(sender: UIButton) {
         
         let alertview = JSSAlertView().show(
@@ -147,15 +204,25 @@ class PlaceDetailViewController: UIViewController, UICollectionViewDelegate, UIC
     
     @IBAction func onWebsiteButtonPressed(sender: UIButton) {
     }
-
+    
     @IBAction func onNavigateButtonPressed(sender: UIButton) {
         performSegueWithIdentifier("RouteSegue", sender: nil)
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .Plain, target: nil, action: nil)
-        let destination = segue.destinationViewController as! RouteMapViewController
-        destination.place = self.place
+        
+        
+        if let destination = segue.destinationViewController as? UsersTableViewController{
+            self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .Plain, target: nil, action: nil)
+            
+            let indexPath = sender as! NSIndexPath
+            destination.userProfile = self.followingUser[indexPath.row].uid
+            
+        }else{
+            self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .Plain, target: nil, action: nil)
+            let destination = segue.destinationViewController as! RouteMapViewController
+            destination.place = self.place
+        }
     }
     
     @IBAction func onSaveButtonPressed(sender: UIButton) {
@@ -288,6 +355,30 @@ class PlaceDetailViewController: UIViewController, UICollectionViewDelegate, UIC
         }
     }
     
+    func getSavedBy(){
+        DataService.usersRef.child(User.currentUserUid()!).child("following").observeEventType(.ChildAdded, withBlock: {(followingSnap) in
+            DataService.rootRef.child("usersLocalities").child(followingSnap.key).observeEventType(.ChildAdded, withBlock: {(localitiesSnap) in
+                DataService.usersRef.child(followingSnap.key).child("savedPlace").observeEventType(.ChildAdded, withBlock: {(userPlaceSnap) in
+                    DataService.placesRef.child(localitiesSnap.key).child(userPlaceSnap.key).observeSingleEventOfType(.Value, withBlock: {(placeValueSnap) in
+                        
+                        if let SavedPlace = SavedPlace.init(snapshot: placeValueSnap){
+                            if SavedPlace.placeID == self.place?.placeID{
+                                print("one of the people you follow saved this place")
+                                DataService.usersRef.child(followingSnap.key).observeSingleEventOfType(.Value, withBlock: {(userImageSnap) in
+                                    if let user = User.init(snapshot: userImageSnap){
+                                        self.followingUser.append(user)
+                                        self.savedByCollectionView.reloadData()
+                                    }
+                                })
+                            }
+                            
+                        }
+                    })
+                })
+            })
+        })
+    }
+    
     func scrollViewDidScroll(scrollView: UIScrollView) {
         
         if scrollView.contentOffset.y > 64  {
@@ -318,28 +409,6 @@ extension UIImage{
         
         return image;
     }
-    
-//    static func circleImage() -> UIImage{
-//        let rect = CGRectMake(0, 0, 20, 20)
-//        UIGraphicsBeginImageContextWithOptions(rect.size, false, 0.0)
-//        let ctx = UIGraphicsGetCurrentContext()
-//        
-//        CGContextSaveGState(ctx)
-//        
-//        
-//        let red: CGFloat = CGFloat(arc4random_uniform(255)) / 255.0
-//        let blue: CGFloat = CGFloat(arc4random_uniform(255)) / 255.0
-//        let green: CGFloat = CGFloat(arc4random_uniform(255)) / 255.0
-//        
-//        let color = UIColor(red: red, green: green, blue: blue, alpha: 1.0)
-//        CGContextSetFillColorWithColor(ctx, color.CGColor);
-//        CGContextFillEllipseInRect(ctx, rect);
-//        
-//        CGContextRestoreGState(ctx);
-//        let circle = UIGraphicsGetImageFromCurrentImageContext();
-//        UIGraphicsEndImageContext();
-//        return circle
-//    }
 }
 
 extension Double {

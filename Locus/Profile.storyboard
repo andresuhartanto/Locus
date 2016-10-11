@@ -424,7 +424,7 @@
         <!--Users Table View Controller-->
         <scene sceneID="OtB-gd-GAg">
             <objects>
-                <tableViewController automaticallyAdjustsScrollViewInsets="NO" id="N7G-l2-SNt" customClass="UsersTableViewController" customModule="Locus" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="FollowingProfileVC" automaticallyAdjustsScrollViewInsets="NO" id="N7G-l2-SNt" customClass="UsersTableViewController" customModule="Locus" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="219" sectionHeaderHeight="18" sectionFooterHeight="18" id="azG-3w-e64">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -499,9 +499,9 @@
         <image name="snorlax" width="968" height="776"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="YJ3-fz-5qm"/>
-        <segue reference="Zgx-cH-zDT"/>
-        <segue reference="PUZ-8n-pLr"/>
+        <segue reference="SUc-dW-5UH"/>
         <segue reference="Imm-VZ-FOU"/>
+        <segue reference="gK0-rA-Lbl"/>
+        <segue reference="YCF-Ha-WoN"/>
     </inferredMetricsTieBreakers>
 </document>
