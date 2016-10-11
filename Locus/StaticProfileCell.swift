@@ -19,6 +19,8 @@ class StaticProfileCell: UITableViewCell {
 
     @IBOutlet weak var placesNameLabel: UILabel!
     
+    @IBOutlet weak var dateCreatedLabel: UILabel!
+    
     // User Table
     @IBOutlet weak var userImage: UIImageView!
     
