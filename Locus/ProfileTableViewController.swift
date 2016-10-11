@@ -48,7 +48,7 @@ class ProfileTableViewController: UITableViewController, StaticHeaderDelegate, F
 //        checkIsMyPost()
         
         self.header?.followButtonPressed.hidden = true
-        
+//        loadLocalities()
     }
     
     func navigation(){
@@ -62,6 +62,19 @@ class ProfileTableViewController: UITableViewController, StaticHeaderDelegate, F
         self.header?.profileImage.layer.borderWidth = 2.0
         self.header?.profileImage.layer.borderColor = UIColor.whiteColor().CGColor
     }
+    
+//    func loadLocalities(){
+//        DataService.rootRef.child("Place").child(User.currentUserUid()!).observeEventType(.Value, withBlock: {(localitiesSnapshot) in
+//            DataService.rootRef.child("usersLocalities").child(User.currentUserUid()!).observeEventType(.ChildAdded, withBlock: {(localitiesCheck) in
+//                DataService.rootRef.child("Place").child(User.currentUserUid()!).child(localitiesCheck.key).observeEventType(.Value, withBlock: {(snapshot) in
+//                    
+//                
+//                
+//                })
+//                
+//            })
+//        })
+//    }
     
     func retrieveCity(){
         DataService.rootRef.child("usersLocalities").child(User.currentUserUid()!).observeEventType(.Value, withBlock: {snapshot in
