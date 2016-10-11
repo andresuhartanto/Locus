@@ -167,9 +167,12 @@ class PlaceDetailViewController: UIViewController, UICollectionViewDelegate, UIC
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         if collectionView == self.savedByCollectionView{
-            let storyboard = UIStoryboard(name: "Profile", bundle: nil)
-            let vc = storyboard.instantiateViewControllerWithIdentifier("FollowingProfileVC")
-            self.navigationController?.pushViewController(vc, animated: true)
+//            let storyboard = UIStoryboard(name: "Profile", bundle: nil)
+            let destination = UsersTableViewController()
+            destination.userProfile = self.followingUser[indexPath.row].uid
+            print(" sending this uid \(destination.userProfile)")
+            
+            self.navigationController?.pushViewController(destination, animated: true)
         }
     }
     
@@ -212,13 +215,16 @@ class PlaceDetailViewController: UIViewController, UICollectionViewDelegate, UIC
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
         
-        if let destination = segue.destinationViewController as? UsersTableViewController{
-            self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .Plain, target: nil, action: nil)
+//            self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .Plain, target: nil, action: nil)
+//            let storyboard = UIStoryboard(name: "Profile", bundle: nil)
+//            let vc = storyboard.instantiateViewControllerWithIdentifier("FollowingProfileVC") as! UsersTableViewController
+//            
+//            let indexPath = sender as! NSIndexPath
+//            vc.userProfile = self.followingUser[indexPath.row].uid
+//            self.navigationController?.pushViewController(vc, animated: true)
+        
             
-            let indexPath = sender as! NSIndexPath
-            destination.userProfile = self.followingUser[indexPath.row].uid
-            
-        }else{
+        if segue.identifier == "RouteSegue"{
             self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .Plain, target: nil, action: nil)
             let destination = segue.destinationViewController as! RouteMapViewController
             destination.place = self.place
@@ -264,7 +270,7 @@ class PlaceDetailViewController: UIViewController, UICollectionViewDelegate, UIC
                              "created_at": NSDate().timeIntervalSince1970]
             
             // add .child(User.currentUserUid()!)
-            let placeRef = DataService.rootRef.child("Place").child("\(aGMSAddress.locality!)").childByAutoId()
+            let placeRef = DataService.rootRef.child("Place").child(User.currentUserUid()!).child("\(aGMSAddress.locality!)").childByAutoId()
             placeRef.updateChildValues(placeDict as [NSObject : AnyObject])
             
             DataService.usersRef.child(User.currentUserUid()!).child("savedPlace").updateChildValues([placeRef.key: true])
@@ -317,7 +323,7 @@ class PlaceDetailViewController: UIViewController, UICollectionViewDelegate, UIC
                         
                         let photoRefDict = ["photoRef": photoReference]
                         
-                        DataService.placesRef.child(locality).child("photoRef").updateChildValues(photoRefDict as [NSObject : AnyObject])
+                        DataService.placesRef.child(User.currentUserUid()!).child(locality).child("photoRef").updateChildValues(photoRefDict as [NSObject : AnyObject])
                     }
                     
                 case .Failure(let error):
@@ -359,7 +365,7 @@ class PlaceDetailViewController: UIViewController, UICollectionViewDelegate, UIC
         DataService.usersRef.child(User.currentUserUid()!).child("following").observeEventType(.ChildAdded, withBlock: {(followingSnap) in
             DataService.rootRef.child("usersLocalities").child(followingSnap.key).observeEventType(.ChildAdded, withBlock: {(localitiesSnap) in
                 DataService.usersRef.child(followingSnap.key).child("savedPlace").observeEventType(.ChildAdded, withBlock: {(userPlaceSnap) in
-                    DataService.placesRef.child(localitiesSnap.key).child(userPlaceSnap.key).observeSingleEventOfType(.Value, withBlock: {(placeValueSnap) in
+                    DataService.placesRef.child(followingSnap.key).child(localitiesSnap.key).child(userPlaceSnap.key).observeSingleEventOfType(.Value, withBlock: {(placeValueSnap) in
                         
                         if let SavedPlace = SavedPlace.init(snapshot: placeValueSnap){
                             if SavedPlace.placeID == self.place?.placeID{

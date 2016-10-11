@@ -243,8 +243,8 @@
                                                     </collectionViewCell>
                                                 </cells>
                                                 <connections>
-                                                    <outlet property="dataSource" destination="1St-Yi-Okt" id="ESW-cp-Qdj"/>
-                                                    <outlet property="delegate" destination="1St-Yi-Okt" id="3mm-ON-1hD"/>
+                                                    <outlet property="dataSource" destination="1St-Yi-Okt" id="ZHO-fh-Qp2"/>
+                                                    <outlet property="delegate" destination="1St-Yi-Okt" id="JW2-ge-jD0"/>
                                                 </connections>
                                             </collectionView>
                                         </subviews>

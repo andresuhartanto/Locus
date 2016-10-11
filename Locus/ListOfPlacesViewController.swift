@@ -12,39 +12,41 @@ import GooglePlaces
 class ListOfPlacesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource{
 
     @IBOutlet weak var tableView: UITableView!
-    var listOfUser = [Place]()
-    var listOfLocation = [Location]()
+    
+    var titleName: String!
+    var userProfile: String!
+    var location = [Place]()
+    var newLocation = [Place]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         tableView.delegate = self
         tableView.dataSource = self
+        self.title = self.titleName
         
         
-        DataService.placesRef.observeEventType(.ChildAdded, withBlock: { placeSnapshot in
-            DataService.placesRef.child(placeSnapshot.key).observeSingleEventOfType(.ChildAdded, withBlock: {(snapshot) in
-                
-                if let place = Place(snapshot:snapshot){
-                    DataService.usersRef.child(place.userUID!).observeSingleEventOfType(.Value, withBlock: {userSnapshot in
-                        if let user = User(snapshot:userSnapshot){
-                            place.userUID = user.userUID
-                            self.listOfUser.append(place)
-                            let location = Location.init()
-                            location.name = place.name
-                            location.placeID = place.placeID
-                            
-                            self.loadFirstPhotoForPlace(location)
-                            self.tableView.reloadData()
-                        }
-                    })
+        for i in self.location{
+            if self.newLocation.count != 0{
+                if (self.newLocation.contains { $0.uid != i.uid }){
+                    self.newLocation.append(i)
                 }
-            })
-        })
-
+            }else{
+                self.newLocation.append(i)
+            }
+        }
+        
+        
+        for i in self.newLocation{
+            
+            loadFirstPhotoForPlace(i)
+            
+        }
     }
     
-    func loadFirstPhotoForPlace(location: Location) {
+    
+    
+    func loadFirstPhotoForPlace(location: Place) {
         
         GMSPlacesClient.sharedClient().lookUpPhotosForPlaceID(location.placeID!) { (photos, error) -> Void in
             if let error = error {
@@ -58,7 +60,7 @@ class ListOfPlacesViewController: UIViewController, UITableViewDelegate, UITable
         }
     }
     
-    func loadImageForMetadata(photoMetadata: [GMSPlacePhotoMetadata], location: Location) {
+    func loadImageForMetadata(photoMetadata: [GMSPlacePhotoMetadata], location: Place) {
         
         for (index, photo) in photoMetadata.enumerate() where index < 1{
             GMSPlacesClient.sharedClient().loadPlacePhoto(photo, callback: { (photo, error) in
@@ -67,8 +69,6 @@ class ListOfPlacesViewController: UIViewController, UITableViewDelegate, UITable
                     print("Error: \(error.description)")
                 } else {
                     location.image = photo
-                    
-                    self.listOfLocation.append(location)
                     self.tableView.reloadData()
                 }
             })
@@ -76,17 +76,27 @@ class ListOfPlacesViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return listOfLocation.count
+        return newLocation.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell: StaticProfileCell = tableView.dequeueReusableCellWithIdentifier("ListSegue") as! StaticProfileCell
-        let location = listOfLocation[indexPath.row]
+        let location = self.newLocation[indexPath.row]
         
         cell.placeImageView.image = location.image
-        cell.placeImageView.layer.shadowOpacity = 0.7
-        cell.placeImageView.layer.shadowRadius = 10.0
         cell.placesNameLabel.text = location.name
+        cell.placesNameLabel.textColor = UIColor.whiteColor()
+        
+        let date = NSDate(timeIntervalSince1970: location.dateCreated!)
+        
+        let dayTimePeriodFormatter = NSDateFormatter()
+        dayTimePeriodFormatter.dateFormat = "dd MMM YYYY"
+        
+        let dateString = dayTimePeriodFormatter.stringFromDate(date)
+        
+        cell.dateCreatedLabel.text = dateString
+        cell.dateCreatedLabel.textColor = UIColor.whiteColor()
+
         
         return cell
     }

@@ -159,8 +159,8 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     
     func getSavedPlace(){
         DataService.usersRef.child(User.currentUserUid()!).child("savedPlace").observeEventType(.ChildAdded , withBlock: { (snapshot) in
-            DataService.rootRef.child("Place").observeEventType(.ChildAdded , withBlock: {(localitySnap) in
-                DataService.rootRef.child("Place").child(localitySnap.key).child(snapshot.key).observeSingleEventOfType(.Value , withBlock: {(snap) in
+            DataService.rootRef.child("Place").child(User.currentUserUid()!).observeEventType(.ChildAdded , withBlock: {(localitySnap) in
+                DataService.rootRef.child("Place").child(User.currentUserUid()!).child(localitySnap.key).child(snapshot.key).observeSingleEventOfType(.Value , withBlock: {(snap) in
                     
                     
                     if let savedPlace = SavedPlace.init(snapshot: snap){
@@ -181,8 +181,8 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     func getFollowingPlace(){
         DataService.usersRef.child(User.currentUserUid()!).child("following").observeEventType(.ChildAdded , withBlock: { (snapshot) in
             DataService.rootRef.child("users").child(snapshot.key).child("savedPlace").observeEventType(.ChildAdded , withBlock: { (snapshot2) in
-                DataService.rootRef.child("Place").observeEventType(.ChildAdded , withBlock: {(localitySnap) in
-                    DataService.rootRef.child("Place").child(localitySnap.key).child(snapshot2.key).observeSingleEventOfType(.Value , withBlock: {(snapshot3) in
+                DataService.rootRef.child("Place").child(snapshot.key).observeEventType(.ChildAdded , withBlock: {(localitySnap) in
+                    DataService.rootRef.child("Place").child(snapshot.key).child(localitySnap.key).child(snapshot2.key).observeSingleEventOfType(.Value , withBlock: {(snapshot3) in
                         if let savedPlace = FollowingSavedPlace.init(snapshot: snapshot3){
                             self.followingSavedPlace.append(savedPlace)
                         }
@@ -261,6 +261,7 @@ extension MapViewController: GMSAutocompleteResultsViewControllerDelegate {
         }else if marker != 0{
             mapView.clear()
             getSavedPlace()
+            getFollowingPlace()
             marker.map = mapView
         }
     }

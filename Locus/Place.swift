@@ -19,6 +19,8 @@ class Place: NSObject{
     var userUID: String?
     var photoRef: String?
     var username: String?
+    var dateCreated: Double?
+    var image: UIImage?
     
     init?(snapshot: FIRDataSnapshot){
         
@@ -60,6 +62,11 @@ class Place: NSObject{
             self.photoRef = dictPhotoRef
         }else{
             self.photoRef = ""
+        }
+        if let dictCreatedRef = dict["created_at"] as? Double{
+            self.dateCreated = dictCreatedRef
+        }else{
+            self.dateCreated = 0.0
         }
         
     
