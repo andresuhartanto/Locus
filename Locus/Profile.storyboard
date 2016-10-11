@@ -85,7 +85,6 @@
         <!--Location View Controller-->
         <scene sceneID="cnB-bF-3Sb">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="zmG-VN-bnu" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController id="zbJ-UI-hcC" customClass="LocationViewController" customModule="Locus" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="sAv-rP-rv3"/>
@@ -155,6 +154,7 @@
                         <outlet property="imageView" destination="kH8-u7-y7v" id="fRe-lP-nDJ"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="zmG-VN-bnu" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-300" y="1646"/>
         </scene>
