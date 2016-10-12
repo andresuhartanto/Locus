@@ -17,14 +17,14 @@
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ProfileCell" rowHeight="246" id="lg0-kN-dS3" customClass="StaticProfileCell" customModule="Locus" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="50" width="600" height="246"/>
                                 <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="lg0-kN-dS3" id="NrA-yG-tay">
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" tableViewCell="lg0-kN-dS3" id="NrA-yG-tay">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="245"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="h0c-KT-m1N">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="h0c-KT-m1N">
                                             <rect key="frame" x="20" y="20" width="560" height="205.5"/>
                                         </imageView>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6YI-h1-5Gg">
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6YI-h1-5Gg">
                                             <rect key="frame" x="20" y="71.5" width="560" height="98"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="98" id="B0D-DR-Me3"/>
@@ -527,10 +527,9 @@
         <image name="snorlax" width="968" height="776"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="tCg-rO-lVc"/>
-        <segue reference="dL3-Dt-vSA"/>
         <segue reference="eri-qb-2xS"/>
-        <segue reference="uTc-c1-ZRI"/>
+        <segue reference="klu-vt-P7J"/>
         <segue reference="tCg-rO-lVc"/>
+        <segue reference="uTc-c1-ZRI"/>
     </inferredMetricsTieBreakers>
 </document>

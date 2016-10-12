@@ -55,11 +55,20 @@
                         <outlet property="mapView" destination="675-Bl-Twa" id="aUB-w1-khl"/>
                         <segue destination="mJF-R8-JbC" kind="show" identifier="DetailSegue" id="lGt-Sr-Kob"/>
                         <segue destination="4fS-Vg-gUw" kind="show" identifier="ProfileSegue" id="4Vd-e5-eos"/>
+                        <segue destination="dDl-Gj-hYj" kind="show" identifier="AddFriendSegue" id="baI-M2-iDw"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="MRs-aX-SFg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1336" y="130"/>
+        </scene>
+        <!--AddFriends-->
+        <scene sceneID="bL0-Ud-J4t">
+            <objects>
+                <viewControllerPlaceholder storyboardName="AddFriends" id="dDl-Gj-hYj" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="NUG-xp-F8t" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2007.5" y="18"/>
         </scene>
         <!--Profile-->
         <scene sceneID="GQE-e1-1nH">
@@ -75,7 +84,7 @@
                 <viewControllerPlaceholder storyboardName="PlaceDetail" id="mJF-R8-JbC" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qLM-wD-GtI" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1961.5" y="153"/>
+            <point key="canvasLocation" x="1975.5" y="206"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="x1P-0l-34b">
