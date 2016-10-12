@@ -25,7 +25,7 @@
                                             <rect key="frame" x="20" y="20" width="560" height="205.5"/>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6YI-h1-5Gg">
-                                            <rect key="frame" x="20" y="71" width="560" height="98"/>
+                                            <rect key="frame" x="20" y="71.5" width="560" height="98"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="98" id="B0D-DR-Me3"/>
                                                 <constraint firstAttribute="width" constant="560" id="TYj-Cw-vHv"/>
@@ -67,8 +67,8 @@
                                     </variation>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="cityNameLabel" destination="6YI-h1-5Gg" id="9a3-M8-Ajm"/>
-                                    <outlet property="profileImageView" destination="h0c-KT-m1N" id="aju-hC-7lT"/>
+                                    <outlet property="cityNameLabel" destination="6YI-h1-5Gg" id="sRS-PB-50N"/>
+                                    <outlet property="profileImageView" destination="h0c-KT-m1N" id="ndf-1S-ORI"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -531,5 +531,6 @@
         <segue reference="gut-BS-OTS"/>
         <segue reference="YJ3-fz-5qm"/>
         <segue reference="dL3-Dt-vSA"/>
+        <segue reference="tCg-rO-lVc"/>
     </inferredMetricsTieBreakers>
 </document>
