@@ -208,7 +208,7 @@
                                                         <constraint firstAttribute="width" constant="120" id="t8S-9o-3C0"/>
                                                     </constraints>
                                                     <state key="normal" title="Button">
-                                                        <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                        <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     </state>
                                                     <connections>
                                                         <action selector="followingOnButtonPressed:" destination="J1M-mn-k8v" eventType="touchUpInside" id="mqB-6z-the"/>
@@ -302,7 +302,7 @@
                                                         <constraint firstAttribute="width" constant="120" id="nsC-lb-0Kw"/>
                                                     </constraints>
                                                     <state key="normal" title="Button">
-                                                        <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                        <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     </state>
                                                     <connections>
                                                         <action selector="followerOnButtonPressed:" destination="Exm-63-3Df" eventType="touchUpInside" id="dnm-Hd-2bh"/>
@@ -388,13 +388,13 @@
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NIw-Se-G9m">
                                                     <rect key="frame" x="20" y="243" width="51" height="26"/>
                                                     <fontDescription key="fontDescription" name="Cochin-BoldItalic" family="Cochin" pointSize="22"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tkm-PA-bZ9">
                                                     <rect key="frame" x="20" y="212.5" width="560" height="26"/>
                                                     <fontDescription key="fontDescription" name="Cochin-BoldItalic" family="Cochin" pointSize="22"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>

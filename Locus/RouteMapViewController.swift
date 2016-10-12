@@ -11,9 +11,10 @@ import GoogleMaps
 import GooglePlaces
 import Alamofire
 import SwiftyJSON
+import JSSAlertView
 
 class RouteMapViewController: UIViewController, GMSMapViewDelegate, CLLocationManagerDelegate {
-
+    
     @IBOutlet weak var mapView: GMSMapView!
     
     let locationManager = CLLocationManager()
@@ -65,7 +66,7 @@ class RouteMapViewController: UIViewController, GMSMapViewDelegate, CLLocationMa
             self.mapView.clear()
             marker.map = self.mapView
         }
-
+        
         
         Alamofire
             .request(.GET, urlString)
@@ -74,16 +75,29 @@ class RouteMapViewController: UIViewController, GMSMapViewDelegate, CLLocationMa
                 case .Success(let responceValue):
                     let json = JSON(responceValue)
                     
-                    if let path = GMSPath.init(fromEncodedPath: json["routes"][0]["overview_polyline"]["points"].string!) {
+                    if let encodedPath = json["routes"][0]["overview_polyline"]["points"].string{
+                        if let path = GMSPath.init(fromEncodedPath: encodedPath) {
+                            
+                            let bounds = GMSCoordinateBounds(path: path)
+                            let update = GMSCameraUpdate.fitBounds(bounds)
+                            self.mapView.moveCamera(update)
+                            
+                            let singleLine = GMSPolyline.init(path: path)
+                            singleLine.strokeWidth = 5
+                            singleLine.strokeColor = UIColor.blueColor()
+                            singleLine.map = self.mapView
+                        }
+                    }else{
+                        let alertview = JSSAlertView().show(
+                            self,
+                            title: "Oops",
+                            text: "No route can be found",
+                            color: UIColorFromHex(0xFF1744, alpha: 1),
+                            iconImage: UIImage(named: "remove-symbol"),
+                            buttonText: "Okay"
+                        )
+                        alertview.setTextTheme(.Light)
                         
-                        let bounds = GMSCoordinateBounds(path: path)
-                        let update = GMSCameraUpdate.fitBounds(bounds)
-                        self.mapView.moveCamera(update)
-                        
-                        let singleLine = GMSPolyline.init(path: path)
-                        singleLine.strokeWidth = 5
-                        singleLine.strokeColor = UIColor.blueColor()
-                        singleLine.map = self.mapView
                     }
                     
                 case .Failure(let error):
@@ -91,5 +105,6 @@ class RouteMapViewController: UIViewController, GMSMapViewDelegate, CLLocationMa
                 }
         }
     }
-
+    
+    
 }
