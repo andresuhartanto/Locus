@@ -21,7 +21,7 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        definesPresentationContext = true
         tableView.delegate = self
         tableView.dataSource = self
         
@@ -31,6 +31,7 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
             controller.searchResultsUpdater = self
             controller.dimsBackgroundDuringPresentation = false
             controller.searchBar.sizeToFit()
+            controller.searchBar.barTintColor = UIColor.init(red: 0/255, green: 176/255, blue: 255/255, alpha: 1)
             
             self.tableView.tableHeaderView = controller.searchBar
             
@@ -63,6 +64,14 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
         })
     }
     
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        let image = getNavigationBarImageWith(1)
+        self.navigationController?.navigationBar.setBackgroundImage(image, forBarMetrics: .Default)
+        self.navigationController?.navigationBar.shadowImage = image
+    }
+    
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
 
         return 1
@@ -93,7 +102,7 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
                     cell.followingButton.hidden = true
                 }else if snapshot.hasChild(user.uid!){
                     
-                    cell.followingButton.backgroundColor = UIColor.greenColor()
+                    cell.followingButton.backgroundColor = UIColor.init(red: 132/255, green: 255/255, blue: 255/255, alpha: 1)
                     cell.followingButton.setTitle("Following", forState: .Normal)
                     cell.followingButton.layer.cornerRadius = 5
                     cell.followingButton.layer.borderWidth = 1
@@ -130,7 +139,7 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
                     cell.followingButton.hidden = true
                 }else if snapshot.hasChild(user.uid!){
                     
-                    cell.followingButton.backgroundColor = UIColor.greenColor()
+                    cell.followingButton.backgroundColor = UIColor.init(red: 132/255, green: 255/255, blue: 255/255, alpha: 1)
                     cell.followingButton.setTitle("Following", forState: .Normal)
                     cell.followingButton.layer.cornerRadius = 5
                     cell.followingButton.layer.borderWidth = 1
@@ -147,9 +156,6 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
             
             return cell
         }
-        
-        
-        
     }
     
     

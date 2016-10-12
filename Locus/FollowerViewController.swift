@@ -25,18 +25,20 @@ class FollowerViewController: UIViewController, UITableViewDelegate, UITableView
         tableView.delegate = self
         tableView.dataSource = self
         
+        definesPresentationContext = true
+
         self.resultSearchController = ({
             let controller = UISearchController(searchResultsController: nil)
             controller.searchResultsUpdater = self
             controller.dimsBackgroundDuringPresentation = false
             controller.searchBar.sizeToFit()
-            
+            controller.searchBar.barTintColor = UIColor.init(red: 0/255, green: 176/255, blue: 255/255, alpha: 1)
             self.tableView.tableHeaderView = controller.searchBar
             
             return controller
         })()
         
-        
+
         guard let currentUserID = self.userProfile else{
             return
         }
@@ -64,6 +66,15 @@ class FollowerViewController: UIViewController, UITableViewDelegate, UITableView
         })
     
     }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        let image = getNavigationBarImageWith(1)
+        self.navigationController?.navigationBar.setBackgroundImage(image, forBarMetrics: .Default)
+        self.navigationController?.navigationBar.shadowImage = image
+    }
+    
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         
         return 1
@@ -114,7 +125,7 @@ class FollowerViewController: UIViewController, UITableViewDelegate, UITableView
                 cell.followerButton.hidden = true
                 
             }else if snapshot.hasChild(user.uid!){
-                cell.followerButton.backgroundColor = UIColor.greenColor()
+                cell.followerButton.backgroundColor = UIColor.init(red: 132/255, green: 255/255, blue: 255/255, alpha: 1)
                 cell.followerButton.setTitle("Following", forState: .Normal)
                 cell.followerButton.layer.cornerRadius = 5
                 cell.followerButton.layer.borderWidth = 1
@@ -130,6 +141,7 @@ class FollowerViewController: UIViewController, UITableViewDelegate, UITableView
         })
         
         return cell
+            
         }else{
             let user = listOfFollower[indexPath.row]
             
@@ -149,7 +161,7 @@ class FollowerViewController: UIViewController, UITableViewDelegate, UITableView
                     cell.followerButton.hidden = true
                     
                 }else if snapshot.hasChild(user.uid!){
-                    cell.followerButton.backgroundColor = UIColor.greenColor()
+                    cell.followerButton.backgroundColor = UIColor.init(red: 132/255, green: 255/255, blue: 255/255, alpha: 1)
                     cell.followerButton.setTitle("Following", forState: .Normal)
                     cell.followerButton.layer.cornerRadius = 5
                     cell.followerButton.layer.borderWidth = 1

@@ -9,6 +9,7 @@
 import UIKit
 import FirebaseDatabase
 import SDWebImage
+import FirebaseAuth
 
 class UsersTableViewController: UITableViewController, StaticUserHeaderDelegate, StaticButtonHeaderDelegate{
 
@@ -32,8 +33,23 @@ class UsersTableViewController: UITableViewController, StaticUserHeaderDelegate,
         if self.userProfile == User.currentUserUid(){
         self.header?.followButtonPressed.hidden = true
         }
+        
+        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
+        
+        let image = getNavigationBarImageWith(0.0)
+        self.navigationController?.navigationBar.setBackgroundImage(image, forBarMetrics: .Default)
+        self.navigationController?.navigationBar.shadowImage = image
 
     }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        let image = getNavigationBarImageWith(0)
+        self.navigationController?.navigationBar.setBackgroundImage(image, forBarMetrics: .Default)
+        self.navigationController?.navigationBar.shadowImage = image
+    }
+    
     
     func navigation(){
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), forBarMetrics: .Default)
@@ -98,6 +114,7 @@ class UsersTableViewController: UITableViewController, StaticUserHeaderDelegate,
         DataService.usersRef.child(userProfileID).observeSingleEventOfType(.Value, withBlock: { userSnapshot in
             if let user = User(snapshot: userSnapshot){
                 self.header?.nameLabel.text = user.username
+                self.title = user.username
                 if let userImageUrl = user.backgroundImage, userImageUrl2 = user.profileImage{
                     
                     let url = NSURL(string: userImageUrl)
@@ -118,8 +135,10 @@ class UsersTableViewController: UITableViewController, StaticUserHeaderDelegate,
 
             if snapshot.hasChild(self.userProfile!){
 
-                self.header?.followButtonPressed.backgroundColor = UIColor.greenColor()
+                self.header?.followButtonPressed.backgroundColor = UIColor.init(red: 132/255, green: 255/255, blue: 255/255, alpha: 1)
                 self.header?.followButtonPressed.setTitle("Following", forState: .Normal)
+                self.header?.followButtonPressed.layer.borderWidth = 1
+                self.header?.followButtonPressed.layer.cornerRadius = 5
                 self.select = false
 
             }else{
@@ -127,6 +146,7 @@ class UsersTableViewController: UITableViewController, StaticUserHeaderDelegate,
                 self.header?.followButtonPressed.setTitle("Follow", forState: .Normal)
                 self.header?.followButtonPressed.layer.cornerRadius = 5
                 self.header?.followButtonPressed.layer.borderWidth = 1
+                
                 self.select = true
             }
         })
@@ -155,12 +175,12 @@ class UsersTableViewController: UITableViewController, StaticUserHeaderDelegate,
         }else if segue.identifier == "FollowerSegue"{
             let nextScene = segue.destinationViewController as! FollowerViewController
             nextScene.userProfile = self.userProfile
+        }else if segue.identifier == "PlaceSegue"{
+            let nextScene = segue.destinationViewController as! ListOfPlacesViewController
+            nextScene.titleName = self.locality
+            nextScene.locality = self.locality
+            nextScene.userProfile = self.userProfile
         }
-//        }else if segue.identifier == "PlaceSegue"{
-//            let nextScene = segue.destinationViewController as! ListOfPlacesViewController
-//            nextScene.titleName = self.locality
-//            nextScene.userProfile = self.userProfile
-//        }
     }
     
     func followButton(){
@@ -208,13 +228,41 @@ class UsersTableViewController: UITableViewController, StaticUserHeaderDelegate,
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let place = listOfLocation[indexPath.row]
+        let location = listOfLocation[indexPath.row]
         
-        self.locality = place.cityName
+        self.locality = location.cityName
         
         self.performSegueWithIdentifier("PlaceSegue", sender: self)
     }
     
     
-
+    @IBAction func onLogOutButtonPressed(sender: AnyObject) {
+        try! FIRAuth.auth()?.signOut()
+        
+        NSUserDefaults.standardUserDefaults().removeObjectForKey("userUID")
+        goBackToLogin()
+        
+    }
+    
+    func goBackToLogin(){
+        let appDelegateTemp = UIApplication.sharedApplication().delegate!
+        let storyboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+        let LogInViewController = storyboard.instantiateInitialViewController()
+        appDelegateTemp.window?!.rootViewController = LogInViewController
+    }
+    
+    override func scrollViewDidScroll(scrollView: UIScrollView) {
+        
+        if scrollView.contentOffset.y > 64  {
+            self.navigationController?.navigationBar.setBackgroundImage(nil, forBarMetrics: .Default)
+            self.navigationController?.navigationBar.shadowImage = nil
+        } else {
+            let progress = scrollView.contentOffset.y / 64
+            let image = getNavigationBarImageWith(progress)
+            self.navigationController?.navigationBar.setBackgroundImage(image, forBarMetrics: .Default)
+            self.navigationController?.navigationBar.shadowImage = image
+        }
+        scrollView.indicatorStyle = UIScrollViewIndicatorStyle.White
+    }
+    
 }

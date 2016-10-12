@@ -51,7 +51,7 @@ class StaticHeader: UIView{
         let backgroundTapGesture = UITapGestureRecognizer(target: self, action: #selector(loadBackground))
         let followingTapGesture = UITapGestureRecognizer(target: self, action: #selector(followingTap))
         let followerTapGesture = UITapGestureRecognizer(target: self, action: #selector(followerTap))
-        
+                
         profileImage.addGestureRecognizer(tapGesture)
         profileImage.userInteractionEnabled = true
         
@@ -83,22 +83,6 @@ class StaticHeader: UIView{
         self.userDelegate.goToFollowerPage()
     }
     
-    @IBAction func onLogOutButtonPressed(sender: UIButton) {
-        try! FIRAuth.auth()?.signOut()
-
-        NSUserDefaults.standardUserDefaults().removeObjectForKey("userUID")
-        
-        
-        goBackToLogin()
-        
-        }
-    
-    func goBackToLogin(){
-        let appDelegateTemp = UIApplication.sharedApplication().delegate!
-        let storyboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
-        let LogInViewController = storyboard.instantiateInitialViewController()
-        appDelegateTemp.window?!.rootViewController = LogInViewController
-    }
     
     @IBAction func followerOnPressedButton(sender: AnyObject) {
         self.buttonDelegate.followButton()
