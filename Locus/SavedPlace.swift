@@ -17,6 +17,7 @@ class SavedPlace {
     var latitude: Double?
     var longitude: Double?
     var userUID: String?
+    var createdAt: Double?
     
     init() {
         placeKey=""
@@ -25,6 +26,7 @@ class SavedPlace {
         latitude=0.0
         longitude=0.0
         userUID=""
+        createdAt=0.0
     }
     
     init?(snapshot: FIRDataSnapshot){
@@ -61,6 +63,12 @@ class SavedPlace {
             self.longitude = dictLongitude
         }else{
             self.longitude = 0.0
+        }
+        
+        if let createdAt = dict["created_at"] as? Double {
+            self.createdAt = createdAt
+        } else {
+            self.createdAt = 0.0
         }
         
         

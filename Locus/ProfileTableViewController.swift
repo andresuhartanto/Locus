@@ -27,6 +27,7 @@ class ProfileTableViewController: UITableViewController, StaticHeaderDelegate, F
     var select:Bool = true
     
     var listOfLocation = [Location]()
+    var locality: String!
     
     let header = NSBundle.mainBundle().loadNibNamed("StaticHeader", owner: 0, options: nil)[0] as? StaticHeader
     
@@ -35,11 +36,9 @@ class ProfileTableViewController: UITableViewController, StaticHeaderDelegate, F
 
         navigation()
         retrieveHeaderData()
-//        retrieveCity()
-//        retrievedSavedPlace()
         retrieveImage()
+
         self.header?.followButtonPressed.hidden = true
-        
     }
     
     func navigation(){
@@ -53,6 +52,8 @@ class ProfileTableViewController: UITableViewController, StaticHeaderDelegate, F
         self.header?.profileImage.layer.borderWidth = 2.0
         self.header?.profileImage.layer.borderColor = UIColor.whiteColor().CGColor
     }
+    
+
     
     func retrieveImage(){
         
@@ -273,6 +274,7 @@ class ProfileTableViewController: UITableViewController, StaticHeaderDelegate, F
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let location = listOfLocation[indexPath.row]
+        
         
 
         self.performSegueWithIdentifier("PlaceSegue", sender: self)
