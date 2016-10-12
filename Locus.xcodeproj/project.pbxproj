@@ -142,7 +142,6 @@
 				A4A951361D9A2DB4009EC2DD /* StaticHeader.swift */,
 				A40C98A01D9E2B77001F5A04 /* FollowingViewController.swift */,
 				A4A951381D9A39BD009EC2DD /* StaticHeader.xib */,
-				65CDC20F1D98F5B500D046FE /* LoginViewController.swift */,
 				A40C98A61DA23112001F5A04 /* StaticFollowerCell.swift */,
 				65CDC21D1D9918D800D046FE /* MapViewController.swift */,
 				A40C98A41DA182D5001F5A04 /* FollowerViewController.swift */,
@@ -152,10 +151,8 @@
 				65CDC2261D9B852400D046FE /* ImageCollectionViewCell.swift */,
 				65AFED6A1DA2435A0074F0C5 /* RouteMapViewController.swift */,
 				65CDC20F1D98F5B500D046FE /* LoginViewController.swift */,
-				A43AE4181DA84C1100FB733B /* Follow */,
 				A43AE4171DA84BED00FB733B /* Profile */,
 				A43AE41A1DA84C7400FB733B /* NSObject */,
-				A43AE4191DA84C6400FB733B /* Map */,
 				65CDC1FA1D98E8F200D046FE /* Assets.xcassets */,
 				65CDC20E1D98F26B00D046FE /* Storyboards */,
 				65CDC2211D9A5AC800D046FE /* Marker View */,
@@ -200,44 +197,14 @@
 			isa = PBXGroup;
 			children = (
 				A4A9512A1D9A248E009EC2DD /* ProfileTableViewController.swift */,
-				A40C98AE1DA25A93001F5A04 /* UsersTableViewController.swift */,
-				A40C98B01DA40CD4001F5A04 /* StaticProfileCell.swift */,
-				A43AE3FF1DA605BC00FB733B /* ListOfPlacesViewController.swift */,
-				A4A951361D9A2DB4009EC2DD /* StaticHeader.swift */,
-				A4A951381D9A39BD009EC2DD /* StaticHeader.xib */,
 			);
 			name = Profile;
-			sourceTree = "<group>";
-		};
-		A43AE4181DA84C1100FB733B /* Follow */ = {
-			isa = PBXGroup;
-			children = (
-				A40C98A01D9E2B77001F5A04 /* FollowingViewController.swift */,
-				A4A951401D9CC3C9009EC2DD /* StaticFollowingCell.swift */,
-				A40C98A41DA182D5001F5A04 /* FollowerViewController.swift */,
-				A40C98A61DA23112001F5A04 /* StaticFollowerCell.swift */,
-			);
-			name = Follow;
-			sourceTree = "<group>";
-		};
-		A43AE4191DA84C6400FB733B /* Map */ = {
-			isa = PBXGroup;
-			children = (
-				65CDC21D1D9918D800D046FE /* MapViewController.swift */,
-				65CDC2241D9B84FE00D046FE /* PlaceDetailViewController.swift */,
-				65CDC2261D9B852400D046FE /* ImageCollectionViewCell.swift */,
-				65AFED6A1DA2435A0074F0C5 /* RouteMapViewController.swift */,
-			);
-			name = Map;
 			sourceTree = "<group>";
 		};
 		A43AE41A1DA84C7400FB733B /* NSObject */ = {
 			isa = PBXGroup;
 			children = (
-				A4A9513A1D9A9F19009EC2DD /* User.swift */,
 				A43AE4131DA6503200FB733B /* Location.swift */,
-				A40C98B21DA40F34001F5A04 /* Place.swift */,
-				65AFED6C1DA25C690074F0C5 /* SavedPlace.swift */,
 			);
 			name = NSObject;
 			sourceTree = "<group>";

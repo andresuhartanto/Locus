@@ -22,6 +22,8 @@ class UsersTableViewController: UITableViewController, StaticUserHeaderDelegate,
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        print("there is an place id \(userProfile)")
+        
         navigation()
         retrieveData()
         retrieveImage()

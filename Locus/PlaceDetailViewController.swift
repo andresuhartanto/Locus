@@ -169,11 +169,12 @@ class PlaceDetailViewController: UIViewController, UICollectionViewDelegate, UIC
         if collectionView == self.savedByCollectionView{
             let storyboard = UIStoryboard(name: "Profile", bundle: nil)
             if let destination = storyboard.instantiateViewControllerWithIdentifier("FollowingProfileVC") as? UsersTableViewController{
-            destination.userProfile = self.followingUser[indexPath.row].uid
-            print(" sending this uid \(destination.userProfile)")
-            
-            self.navigationController?.pushViewController(destination, animated: true)
-        }
+                destination.userProfile = self.followingUser[indexPath.row].uid
+                print(" sending this uid \(destination.userProfile)")
+                
+                self.navigationController?.pushViewController(destination, animated: true)
+            }
+        
         }
     }
     
@@ -216,15 +217,15 @@ class PlaceDetailViewController: UIViewController, UICollectionViewDelegate, UIC
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
         
-//            self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .Plain, target: nil, action: nil)
-//            let storyboard = UIStoryboard(name: "Profile", bundle: nil)
-//            let vc = storyboard.instantiateViewControllerWithIdentifier("FollowingProfileVC") as! UsersTableViewController
-//            
-//            let indexPath = sender as! NSIndexPath
-//            vc.userProfile = self.followingUser[indexPath.row].uid
-//            self.navigationController?.pushViewController(vc, animated: true)
+        //            self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .Plain, target: nil, action: nil)
+        //            let storyboard = UIStoryboard(name: "Profile", bundle: nil)
+        //            let vc = storyboard.instantiateViewControllerWithIdentifier("FollowingProfileVC") as! UsersTableViewController
+        //
+        //            let indexPath = sender as! NSIndexPath
+        //            vc.userProfile = self.followingUser[indexPath.row].uid
+        //            self.navigationController?.pushViewController(vc, animated: true)
         
-            
+        
         if segue.identifier == "RouteSegue"{
             self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .Plain, target: nil, action: nil)
             let destination = segue.destinationViewController as! RouteMapViewController

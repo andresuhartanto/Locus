@@ -520,17 +520,17 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="W51-vp-vyv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2532" y="591"/>
+            <point key="canvasLocation" x="2563" y="607"/>
         </scene>
     </scenes>
     <resources>
         <image name="snorlax" width="968" height="776"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="Zgx-cH-zDT"/>
-        <segue reference="gut-BS-OTS"/>
-        <segue reference="YJ3-fz-5qm"/>
+        <segue reference="tCg-rO-lVc"/>
         <segue reference="dL3-Dt-vSA"/>
+        <segue reference="eri-qb-2xS"/>
+        <segue reference="uTc-c1-ZRI"/>
         <segue reference="tCg-rO-lVc"/>
     </inferredMetricsTieBreakers>
 </document>
