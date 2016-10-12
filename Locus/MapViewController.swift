@@ -80,6 +80,10 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             
             floatingButton.close()}
         
+        floatingButton.addItem("Add Friends", icon: UIImage(named: "add-friend")) {item in
+            self.performSegueWithIdentifier("AddFriendSegue", sender: nil)
+            floatingButton.close()}
+        
         self.view.addSubview(floatingButton)
     }
     
@@ -118,6 +122,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             mapView.myLocationEnabled = true
             
             locationManager.stopUpdatingLocation()
+            
         }
     }
     
