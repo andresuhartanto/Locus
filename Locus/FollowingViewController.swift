@@ -182,10 +182,15 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let user = listOfFollowing[indexPath.row]
-        
-        self.userProfile = user.uid
-        self.performSegueWithIdentifier("UserSegue", sender: self)
+        if (self.resultSearchController.active){
+            let user = filteredTableData[indexPath.row]
+            self.userProfile = user.uid
+            self.performSegueWithIdentifier("UserSegue", sender: self)
+        }else{
+            let user = listOfFollowing[indexPath.row]
+            self.userProfile = user.uid
+            self.performSegueWithIdentifier("UserSegue", sender: self)
+    }
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {

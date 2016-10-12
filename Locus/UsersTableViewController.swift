@@ -137,7 +137,7 @@ class UsersTableViewController: UITableViewController, StaticUserHeaderDelegate,
 
             if snapshot.hasChild(self.userProfile!){
 
-                self.header?.followButtonPressed.backgroundColor = UIColor.init(red: 132/255, green: 255/255, blue: 255/255, alpha: 1)
+                self.header?.followButtonPressed.backgroundColor = UIColor.locusBlueColor()
                 self.header?.followButtonPressed.setTitle("Following", forState: .Normal)
                 self.header?.followButtonPressed.layer.borderWidth = 1
                 self.header?.followButtonPressed.layer.cornerRadius = 5
