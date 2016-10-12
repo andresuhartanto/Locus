@@ -41,6 +41,15 @@ class AddFriendViewController: UIViewController, UITableViewDelegate, UITableVie
         
         
     }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        let image = getNavigationBarImageWith(1)
+        self.navigationController?.navigationBar.setBackgroundImage(image, forBarMetrics: .Default)
+        self.navigationController?.navigationBar.shadowImage = image
+    }
+    
     func willPresentSearchController(searchController: UISearchController) {
         searchController.searchBar.barTintColor = UIColor.locusBlueColor()
     }
@@ -73,7 +82,7 @@ class AddFriendViewController: UIViewController, UITableViewDelegate, UITableVie
         
         return 1
     }
-
+    
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if (self.resultSearchController.active) {
@@ -82,7 +91,7 @@ class AddFriendViewController: UIViewController, UITableViewDelegate, UITableVie
         else {
             return self.listOfUsers.count
         }
-
+        
     }
     
     func updateSearchResultsForSearchController(searchController: UISearchController)
@@ -96,7 +105,7 @@ class AddFriendViewController: UIViewController, UITableViewDelegate, UITableVie
         
         self.tableView.reloadData()
     }
-
+    
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("AddFriendCell") as! AddFriendTableViewCell
@@ -126,11 +135,11 @@ class AddFriendViewController: UIViewController, UITableViewDelegate, UITableVie
                     cell.followButton.layer.cornerRadius = 5
                     cell.followButton.layer.borderWidth = 1
                     cell.checker = false
-                
+                    
                 }
             })
             return cell
-
+            
         }else{
             let user = listOfUsers[indexPath.row]
             
@@ -165,14 +174,24 @@ class AddFriendViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if tableView == self.tableView{
-            let user = listOfUsers[indexPath.row]
+        if (self.resultSearchController.active){
+            let user = filteredTableData[indexPath.row]
             let storyboard = UIStoryboard(name: "Profile", bundle: nil)
             if let destination = storyboard.instantiateViewControllerWithIdentifier("FollowingProfileVC") as? UsersTableViewController{
                 destination.userProfile = user.uid
-                self.navigationController?.pushViewController(destination, animated: true)        }
+                self.navigationController?.pushViewController(destination, animated: true)
+            }
             
-        }
+            }else{
+                let user = listOfUsers[indexPath.row]
+                let storyboard = UIStoryboard(name: "Profile", bundle: nil)
+                if let destination = storyboard.instantiateViewControllerWithIdentifier("FollowingProfileVC") as? UsersTableViewController{
+                    destination.userProfile = user.uid
+                    self.navigationController?.pushViewController(destination, animated: true)
+                    
+                }
+                
+            }
     }
     
 }

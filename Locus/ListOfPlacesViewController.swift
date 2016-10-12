@@ -102,6 +102,7 @@ class ListOfPlacesViewController: UIViewController, UITableViewDelegate, UITable
         if segue.identifier == "PlaceDetailSegue"{
             let nextScene = segue.destinationViewController as! PlaceDetailViewController
             nextScene.place = self.place
+            nextScene.saved = true
         }
     }
     
