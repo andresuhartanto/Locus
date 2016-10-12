@@ -12,7 +12,7 @@ import Fusuma
 import FirebaseStorage
 import SDWebImage
 import GooglePlaces
-
+import FirebaseAuth
 
 
 class ProfileTableViewController: UITableViewController, StaticHeaderDelegate, FusumaDelegate, StaticUserHeaderDelegate {
@@ -39,7 +39,22 @@ class ProfileTableViewController: UITableViewController, StaticHeaderDelegate, F
         retrieveImage()
 
         self.header?.followButtonPressed.hidden = true
+        
+        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
+        
+        let image = getNavigationBarImageWith(0.0)
+        self.navigationController?.navigationBar.setBackgroundImage(image, forBarMetrics: .Default)
+        self.navigationController?.navigationBar.shadowImage = image
     }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        let image = getNavigationBarImageWith(0)
+        self.navigationController?.navigationBar.setBackgroundImage(image, forBarMetrics: .Default)
+        self.navigationController?.navigationBar.shadowImage = image
+    }
+    
     
     func navigation(){
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), forBarMetrics: .Default)
@@ -106,6 +121,7 @@ class ProfileTableViewController: UITableViewController, StaticHeaderDelegate, F
         DataService.usersRef.child(currentUserID).observeSingleEventOfType(.Value, withBlock: { userSnapshot in
             if let user = User(snapshot: userSnapshot){
                 self.header?.nameLabel.text = user.username
+                self.title = user.username
                 if let userImageUrl = user.backgroundImage, userImageUrl2 = user.profileImage{
                     
                     let url = NSURL(string: userImageUrl)
@@ -124,6 +140,10 @@ class ProfileTableViewController: UITableViewController, StaticHeaderDelegate, F
         DataService.usersRef.child(User.currentUserUid()!).child("following").observeEventType(.Value, withBlock: { snapshot in
             self.header?.followingCount.text = String(snapshot.childrenCount)
         })
+    
+        DataService.usersRef.child(User.currentUserUid()!).child("savedPlace").observeEventType(.Value, withBlock: { snapshot in
+            self.header?.locationCount.text = String(snapshot.childrenCount)
+        })
     }
     
     func goToFollowerPage() {
@@ -139,11 +159,11 @@ class ProfileTableViewController: UITableViewController, StaticHeaderDelegate, F
         if segue.identifier == "FollowingSegue"{
             let nextScene = segue.destinationViewController as! FollowingViewController
             nextScene.userProfile = User.currentUserUid()
-//        }else if segue.identifier == "PlaceSegue"{
-//            let nextScene = segue.destinationViewController as! ListOfPlacesViewController
-//            nextScene.titleName = self.locality
-//            nextScene.location = self.location
-//            nextScene.userProfile = User.currentUserUid()
+        }else if segue.identifier == "PlaceSegue"{
+            let nextScene = segue.destinationViewController as! ListOfPlacesViewController
+            nextScene.titleName = self.locality
+            nextScene.locality = self.locality
+            nextScene.userProfile = User.currentUserUid()
         }else if segue.identifier == "FollowerSegue"{
             let nextScene = segue.destinationViewController as! FollowerViewController
             nextScene.userProfile = User.currentUserUid()
@@ -163,6 +183,7 @@ class ProfileTableViewController: UITableViewController, StaticHeaderDelegate, F
         self.presentViewController(fusuma, animated: true, completion:nil)
         self.cameraShown = true
     }
+    
 
 
 
@@ -241,6 +262,7 @@ class ProfileTableViewController: UITableViewController, StaticHeaderDelegate, F
         
     }
     
+    
     override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
             header?.delegate = self
             header?.userDelegate = self
@@ -275,13 +297,42 @@ class ProfileTableViewController: UITableViewController, StaticHeaderDelegate, F
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let location = listOfLocation[indexPath.row]
         
-        
+        self.locality = location.cityName
 
         self.performSegueWithIdentifier("PlaceSegue", sender: self)
     }
     
+    override func scrollViewDidScroll(scrollView: UIScrollView) {
+        
+        if scrollView.contentOffset.y > 64  {
+            self.navigationController?.navigationBar.setBackgroundImage(nil, forBarMetrics: .Default)
+            self.navigationController?.navigationBar.shadowImage = nil
+        } else {
+            let progress = scrollView.contentOffset.y / 64
+            let image = getNavigationBarImageWith(progress)
+            self.navigationController?.navigationBar.setBackgroundImage(image, forBarMetrics: .Default)
+            self.navigationController?.navigationBar.shadowImage = image
+        }
+        scrollView.indicatorStyle = UIScrollViewIndicatorStyle.White
+    }
     
-
+    @IBAction func onLogOutButtonPressed(sender: AnyObject) {
+        try! FIRAuth.auth()?.signOut()
+        
+        NSUserDefaults.standardUserDefaults().removeObjectForKey("userUID")
+        
+        
+        goBackToLogin()
+        
+    }
+    
+    func goBackToLogin(){
+        let appDelegateTemp = UIApplication.sharedApplication().delegate!
+        let storyboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+        let LogInViewController = storyboard.instantiateInitialViewController()
+        appDelegateTemp.window?!.rootViewController = LogInViewController
+    }
+    
 }
 
 
