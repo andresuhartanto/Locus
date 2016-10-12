@@ -174,6 +174,7 @@ class PlaceDetailViewController: UIViewController, UICollectionViewDelegate, UIC
                 
                 self.navigationController?.pushViewController(destination, animated: true)
             }
+        
         }
     }
     

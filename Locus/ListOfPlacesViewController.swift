@@ -16,7 +16,6 @@ class ListOfPlacesViewController: UIViewController, UITableViewDelegate, UITable
     var titleName: String!
     var userProfile: String!
     var location = [Place]()
-    var newLocation = [Place]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,27 +24,7 @@ class ListOfPlacesViewController: UIViewController, UITableViewDelegate, UITable
         tableView.dataSource = self
         self.title = self.titleName
         
-        
-        for i in self.location{
-            if self.newLocation.count != 0{
-                if (self.newLocation.contains { $0.uid != i.uid }){
-                    self.newLocation.append(i)
-                }
-            }else{
-                self.newLocation.append(i)
-            }
-        }
-        
-        
-        for i in self.newLocation{
-            
-            loadFirstPhotoForPlace(i)
-            
-        }
     }
-    
-    
-    
     func loadFirstPhotoForPlace(location: Place) {
         
         GMSPlacesClient.sharedClient().lookUpPhotosForPlaceID(location.placeID!) { (photos, error) -> Void in
@@ -76,12 +55,12 @@ class ListOfPlacesViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return newLocation.count
+        return location.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell: StaticProfileCell = tableView.dequeueReusableCellWithIdentifier("ListSegue") as! StaticProfileCell
-        let location = self.newLocation[indexPath.row]
+        let location = self.location[indexPath.row]
         
         cell.placeImageView.image = location.image
         cell.placesNameLabel.text = location.name
